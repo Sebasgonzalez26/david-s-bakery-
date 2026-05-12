@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="../../../../../../../../Portafolio/Bakerys.API/Abstracciones/Abstracciones.csproj" />
+  <Project Path="../../../../../../../../Portafolio/Bakerys.API/DB/DB.sqlproj" Id="efda1e11-39ef-4c55-a818-999f1cec34ae">
+    <Build />
+    <Deploy />
+  </Project>
+</Solution>
