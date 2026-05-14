@@ -1,11 +1,8 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Data;
 
+namespace Abstracciones.Interfaces.DA;
 
-namespace Abstracciones.Interfaces.DA
+public interface IRepositorioDapper
 {
-    public interface IRepositorioDapper
-    {
-
-        SqlConnection ObtenerRepositorio();
-    }
+    IDbConnection ObtenerRepositorio();
 }

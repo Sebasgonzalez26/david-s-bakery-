@@ -1,7 +1,6 @@
 ﻿using Abstracciones.Interfaces.DA;
 using Abstracciones.Modelos;
 using Microsoft.Data.SqlClient;
-using System.Data.SqlTypes;
 
 namespace DA
 {
@@ -15,7 +14,7 @@ namespace DA
         public ClienteDA(IRepositorioDapper repositorioDapper)
         {
             _repositorioDapper = repositorioDapper;
-            _sqlconexion = _repositorioDapper.ObtenerRepositorio();
+            _sqlconexion = (SqlConnection)_repositorioDapper.ObtenerRepositorio();
         }
 
        
