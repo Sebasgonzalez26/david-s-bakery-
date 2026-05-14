@@ -16,7 +16,7 @@ namespace DA
         public PedidoDA(IRepositorioDapper repositorioDapper)
         {
             _repositorioDapper = repositorioDapper;
-            _sqlconexion = _repositorioDapper.ObtenerRepositorio();
+            _sqlconexion = (SqlConnection)_repositorioDapper.ObtenerRepositorio();
         }
 
         public Task<int> ActualizarEstado(int id, int estadoId)
