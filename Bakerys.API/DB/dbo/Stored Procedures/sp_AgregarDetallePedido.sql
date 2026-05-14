@@ -39,5 +39,5 @@ BEGIN
     INSERT INTO DetallesPedido (PedidoId, Descripcion, Sabor, Tamanio, Decoracion, Cantidad, PrecioUnitario)
     VALUES (@PedidoId, @Descripcion, @Sabor, @Tamanio, @Decoracion, @Cantidad, @PrecioUnitario);
 
-    SELECT * FROM DetallesPedido WHERE DetallePedidoId = SCOPE_IDENTITY();
+    SELECT CAST(SCOPE_IDENTITY() AS INT);
 END

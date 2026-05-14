@@ -39,18 +39,6 @@ BEGIN
     INSERT INTO Pedidos (ClienteId, FechaEntrega, MontoTotal, ImagenReferenciaUrl, Notas)
     VALUES (@ClienteId, @FechaEntrega, @MontoTotal, @ImagenReferenciaUrl, @Notas);
 
-    -- Devuelve el pedido recién creado con datos del cliente y estado
-    SELECT
-        p.PedidoId,
-        c.Nombre      AS Cliente,
-        c.Telefono,
-        e.Nombre      AS Estado,
-        p.FechaEntrega,
-        p.MontoTotal,
-        p.Notas,
-        p.FechaCreacion
-    FROM Pedidos p
-        INNER JOIN Clientes      c ON c.ClienteId = p.ClienteId
-        INNER JOIN EstadosPedido e ON e.EstadoId  = p.EstadoId
-    WHERE p.PedidoId = SCOPE_IDENTITY();
+    -- Devuelve el Id del pedido recién creado
+    SELECT CAST(SCOPE_IDENTITY() AS INT);
 END

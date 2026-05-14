@@ -34,5 +34,5 @@ BEGIN
     SET Activo = 0
     WHERE ClienteId = @ClienteId;
 
-    SELECT 'Cliente desactivado correctamente.' AS Mensaje;
+    SELECT @ClienteId;
 END

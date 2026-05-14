@@ -70,19 +70,6 @@ BEGIN
     INSERT INTO Pagos (PedidoId, Monto, TipoPago, ComprobanteUrl, Notas)
     VALUES (@PedidoId, @Monto, @TipoPago, @ComprobanteUrl, @Notas);
 
-    -- Devuelve el resumen actualizado del pedido
-    SELECT
-        pg.PagoId,
-        pg.PedidoId,
-        c.Nombre                                         AS Cliente,
-        pg.Monto,
-        pg.TipoPago,
-        pg.FechaPago,
-        @MontoTotal                                      AS MontoTotal,
-        @TotalPagado + @Monto                            AS TotalPagado,
-        @SaldoPendiente - @Monto                         AS SaldoPendiente
-    FROM Pagos pg
-        INNER JOIN Pedidos  p ON p.PedidoId  = pg.PedidoId
-        INNER JOIN Clientes c ON c.ClienteId = p.ClienteId
-    WHERE pg.PagoId = SCOPE_IDENTITY();
+    -- Devuelve el Id del pago recién registrado
+    SELECT CAST(SCOPE_IDENTITY() AS INT);
 END
