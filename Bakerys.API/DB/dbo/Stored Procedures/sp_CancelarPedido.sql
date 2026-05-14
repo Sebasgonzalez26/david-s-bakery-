@@ -50,5 +50,5 @@ BEGIN
         FechaActualizacion = GETDATE()
     WHERE PedidoId = @PedidoId;
 
-    SELECT 'Pedido cancelado correctamente.' AS Mensaje;
+    SELECT @PedidoId;
 END

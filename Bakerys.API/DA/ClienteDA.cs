@@ -1,5 +1,6 @@
 ﻿using Abstracciones.Interfaces.DA;
 using Abstracciones.Modelos;
+using Dapper;
 using Microsoft.Data.SqlClient;
 
 namespace DA
@@ -17,37 +18,71 @@ namespace DA
             _sqlconexion = (SqlConnection)_repositorioDapper.ObtenerRepositorio();
         }
 
-       
 
 
-        public Task<int> Agregar(ClienteRequest cliente)
+
+        public async Task<int> Agregar(ClienteRequest cliente)
         {
-            throw new NotImplementedException();
+            string query = @"sp_CrearCliente";
+            var resultado = await _sqlconexion.ExecuteScalarAsync<int>(query, new
+            {
+                Nombre   = cliente.Nombre,
+                Telefono = cliente.Telefono,
+                Email    = cliente.Email,
+                Notas    = cliente.Notas
+            });
+            return resultado;
         }
 
-        public Task<IEnumerable<ClienteResponse>> Buscar(string busqueda)
+        public async Task<IEnumerable<ClienteResponse>> Buscar(string busqueda)
         {
-            throw new NotImplementedException();
+            string query = "sp_ObtenerClientes";
+            var resultado = await _sqlconexion.QueryAsync<ClienteResponse>(query, new
+            {
+                Busqueda = busqueda
+            });
+            return resultado;
         }
 
-        public Task<int> Desactivar(int id)
+        public async Task<int> Desactivar(int id)
         {
-            throw new NotImplementedException();
+            string query = "sp_DesactivarCliente";
+            var resultado = await _sqlconexion.ExecuteScalarAsync<int>(query, new
+            {
+                ClienteId = id
+            });
+            return resultado;
         }
 
-        public Task<int> Editar(int id, ClienteRequest cliente)
+        public async Task<int> Editar(int id, ClienteRequest cliente)
         {
-            throw new NotImplementedException();
+            string query = "sp_ActualizarCliente";
+            var resultado = await _sqlconexion.ExecuteScalarAsync<int>(query, new
+            {
+                ClienteId = id,
+                Nombre    = cliente.Nombre,
+                Telefono  = cliente.Telefono,
+                Email     = cliente.Email,
+                Notas     = cliente.Notas
+            });
+            return resultado;
         }
 
-        public Task<IEnumerable<ClienteResponse>> Obtener()
+        public async Task<IEnumerable<ClienteResponse>> Obtener()
         {
-            throw new NotImplementedException();
+            string query = "sp_ObtenerClientes";
+            var resultado = await _sqlconexion.QueryAsync<ClienteResponse>(query);
+            return resultado;
         }
 
-        public Task<ClienteResponse> Obtener(int id)
+        public async Task<ClienteResponse> Obtener(int id)
         {
-            throw new NotImplementedException();
+            string query = "sp_ObtenerClientePorId";
+            var resultado = await _sqlconexion.QueryFirstOrDefaultAsync<ClienteResponse>(query, new
+            {
+                ClienteId = id
+            });
+            return resultado;
         }
     }
 }

@@ -40,5 +40,5 @@ BEGIN
         Notas     = @Notas
     WHERE ClienteId = @ClienteId;
 
-    SELECT * FROM Clientes WHERE ClienteId = @ClienteId;
+    SELECT @ClienteId;
 END

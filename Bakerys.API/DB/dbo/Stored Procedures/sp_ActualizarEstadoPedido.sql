@@ -48,13 +48,5 @@ BEGIN
         FechaActualizacion = GETDATE()
     WHERE PedidoId = @PedidoId;
 
-    SELECT
-        p.PedidoId,
-        c.Nombre  AS Cliente,
-        e.Nombre  AS Estado,
-        p.FechaActualizacion
-    FROM Pedidos p
-        INNER JOIN Clientes      c ON c.ClienteId = p.ClienteId
-        INNER JOIN EstadosPedido e ON e.EstadoId  = p.EstadoId
-    WHERE p.PedidoId = @PedidoId;
+    SELECT @PedidoId;
 END
