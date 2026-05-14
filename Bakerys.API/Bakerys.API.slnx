@@ -1,7 +1,10 @@
 <Solution>
-  <Project Path="../../../../../../../../Portafolio/Bakerys.API/Abstracciones/Abstracciones.csproj" />
-  <Project Path="../../../../../../../../Portafolio/Bakerys.API/DB/DB.sqlproj" Id="efda1e11-39ef-4c55-a818-999f1cec34ae">
+  <Project Path="Abstracciones/Abstracciones.csproj" />
+  <Project Path="API/API.csproj" Id="b0a7f8a8-e166-41b5-a38b-6f0b5a3e8565" />
+  <Project Path="DA/DA.csproj" Id="bd2ebec9-dfa3-416c-8b3b-131f99c7c852" />
+  <Project Path="DB/DB.sqlproj" Id="efda1e11-39ef-4c55-a818-999f1cec34ae">
     <Build />
     <Deploy />
   </Project>
+  <Project Path="Flujo/Flujo.csproj" Id="d317b603-0d23-4a6e-83e6-f9233fa53251" />
 </Solution>

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Abstracciones.Interfaces.API
 {
-    public interface IClienteAPI
+    public interface IClienteController
     {
         Task<IActionResult> Obtener();
         Task<IActionResult> Obtener(int id);
