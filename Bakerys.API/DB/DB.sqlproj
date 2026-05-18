@@ -82,5 +82,21 @@
     <Build Include="dbo\Stored Procedures\sp_AgregarDetallePedido.sql" />
     <Build Include="dbo\Stored Procedures\sp_ActualizarEstadoPedido.sql" />
     <Build Include="dbo\Stored Procedures\sp_ActualizarCliente.sql" />
+    <Build Include="dbo\Tables\MovimientosInventario.sql" />
+    <Build Include="dbo\Tables\ProductosInventario.sql" />
+    <Build Include="dbo\Tables\TransaccionesFinanzas.sql" />
+    <Build Include="dbo\Stored Procedures\sp_ActualizarProducto.sql" />
+    <Build Include="dbo\Stored Procedures\sp_CrearProducto.sql" />
+    <Build Include="dbo\Stored Procedures\sp_DesactivarProducto.sql" />
+    <Build Include="dbo\Stored Procedures\sp_ObtenerMovimientosPorProducto.sql" />
+    <Build Include="dbo\Stored Procedures\sp_ObtenerProductoPorId.sql" />
+    <Build Include="dbo\Stored Procedures\sp_ObtenerProductos.sql" />
+    <Build Include="dbo\Stored Procedures\sp_RegistrarMovimiento.sql" />
+    <Build Include="dbo\Stored Procedures\sp_ActualizarTransaccion.sql" />
+    <Build Include="dbo\Stored Procedures\sp_EliminarTransaccion.sql" />
+    <Build Include="dbo\Stored Procedures\sp_ObtenerResumenFinanciero.sql" />
+    <Build Include="dbo\Stored Procedures\sp_ObtenerTransacciones.sql" />
+    <Build Include="dbo\Stored Procedures\sp_ObtenerTransaccionPorId.sql" />
+    <Build Include="dbo\Stored Procedures\sp_RegistrarTransaccion.sql" />
   </ItemGroup>
 </Project>
