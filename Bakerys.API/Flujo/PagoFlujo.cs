@@ -15,17 +15,17 @@ namespace Flujo
 
         public Task<int> Agregar(PagoRequest pago)
         {
-            throw new NotImplementedException();
+            return _pagoDA.Agregar(pago);
         }
 
         public Task<IEnumerable<PagoResponse>> ObtenerPorPedido(int pedidoId)
         {
-            throw new NotImplementedException();
+            return _pagoDA.ObtenerPorPedido(pedidoId);
         }
 
         public Task<decimal> ObtenerSaldoPendiente(int pedidoId)
         {
-            throw new NotImplementedException();
+            return _pagoDA.ObtenerSaldoPendiente(pedidoId);
         }
     }
 }

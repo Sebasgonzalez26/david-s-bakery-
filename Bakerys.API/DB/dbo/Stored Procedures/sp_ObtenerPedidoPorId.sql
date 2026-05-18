@@ -1,25 +1,18 @@
-﻿
--- =====================================================================
--- SP 4: sp_ObtenerPedidoPorId
--- Trae el pedido completo: encabezado + detalles + historial de pagos.
--- Devuelve 3 result sets que la API lee por separado.
--- =====================================================================
-CREATE   PROCEDURE sp_ObtenerPedidoPorId
+﻿CREATE PROCEDURE sp_ObtenerPedidoPorId
     @PedidoId INT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- Validar que exista
     IF NOT EXISTS (SELECT 1 FROM Pedidos WHERE PedidoId = @PedidoId)
     BEGIN
         RAISERROR('Pedido no encontrado.', 16, 1);
         RETURN;
     END
 
-    -- Result Set 1: Encabezado del pedido
+    -- Result Set 1: Encabezado
     SELECT
-        p.PedidoId,
+        p.PedidoId                                      AS Id,
         c.ClienteId,
         c.Nombre                                        AS Cliente,
         c.Telefono,
@@ -31,8 +24,7 @@ BEGIN
         p.MontoTotal - ISNULL(SUM(pg.Monto), 0)         AS SaldoPendiente,
         p.ImagenReferenciaUrl,
         p.Notas,
-        p.FechaCreacion,
-        p.FechaActualizacion
+        p.FechaCreacion
     FROM Pedidos p
         INNER JOIN Clientes      c  ON c.ClienteId = p.ClienteId
         INNER JOIN EstadosPedido e  ON e.EstadoId  = p.EstadoId
@@ -41,25 +33,26 @@ BEGIN
     GROUP BY
         p.PedidoId, c.ClienteId, c.Nombre, c.Telefono,
         e.EstadoId, e.Nombre, p.FechaEntrega, p.MontoTotal,
-        p.ImagenReferenciaUrl, p.Notas,
-        p.FechaCreacion, p.FechaActualizacion;
+        p.ImagenReferenciaUrl, p.Notas, p.FechaCreacion;
 
-    -- Result Set 2: Detalles del pedido (los pasteles)
+    -- Result Set 2: Detalles
     SELECT
-        DetallePedidoId,
+        DetallePedidoId                     AS Id,
+        PedidoId,
         Descripcion,
         Sabor,
         Tamanio,
         Decoracion,
         Cantidad,
         PrecioUnitario,
-        Cantidad * PrecioUnitario AS Subtotal
+        Cantidad * PrecioUnitario           AS Subtotal
     FROM DetallesPedido
     WHERE PedidoId = @PedidoId;
 
-    -- Result Set 3: Historial de pagos
+    -- Result Set 3: Pagos
     SELECT
-        PagoId,
+        PagoId          AS Id,
+        PedidoId,
         Monto,
         TipoPago,
         FechaPago,

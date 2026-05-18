@@ -75,7 +75,7 @@ namespace DA
             return resultado;
         }
 
-        public async Task<ClienteResponse> Obtener(int id)
+        public async Task<ClienteResponse?> Obtener(int id)
         {
             string query = "sp_ObtenerClientePorId";
             var resultado = await _sqlconexion.QueryFirstOrDefaultAsync<ClienteResponse>(query, new

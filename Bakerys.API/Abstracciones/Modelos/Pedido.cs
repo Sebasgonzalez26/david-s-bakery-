@@ -13,7 +13,7 @@ public class PedidoBase
 public class PedidoRequest : PedidoBase
 {
     public int      ClienteId    { get; set; }
-    public DateOnly FechaEntrega { get; set; }
+    public DateTime FechaEntrega { get; set; }
 }
 
 public class PedidoResponse : PedidoBase
@@ -24,7 +24,7 @@ public class PedidoResponse : PedidoBase
     public string   Telefono       { get; set; } = string.Empty;
     public int      EstadoId       { get; set; }
     public string   Estado         { get; set; } = string.Empty;
-    public DateOnly FechaEntrega   { get; set; }
+    public DateTime FechaEntrega   { get; set; }
     public DateTime FechaCreacion  { get; set; }
     public decimal  TotalPagado    { get; set; }
     public decimal  SaldoPendiente { get; set; }

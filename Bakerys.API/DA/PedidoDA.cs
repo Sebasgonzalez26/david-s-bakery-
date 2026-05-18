@@ -53,7 +53,7 @@ namespace DA
             return resultado;
         }
 
-        public async Task<PedidoResponse> Obtener(int id)
+        public async Task<PedidoResponse?> Obtener(int id)
         {
             string query = "sp_ObtenerPedidoPorId";
 
@@ -73,7 +73,7 @@ namespace DA
             return pedido;
         }
 
-        public async Task<IEnumerable<PedidoResponse>> Buscar(string? busqueda, int? estadoId, DateOnly? fechaDesde, DateOnly? fechaHasta)
+        public async Task<IEnumerable<PedidoResponse>> Buscar(string? busqueda, int? estadoId, DateTime? fechaDesde, DateTime? fechaHasta)
         {
             string query = "sp_ObtenerPedidos";
             var resultado = await _sqlconexion.QueryAsync<PedidoResponse>(query, new

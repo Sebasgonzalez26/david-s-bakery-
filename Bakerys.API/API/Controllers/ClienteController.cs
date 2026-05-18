@@ -1,4 +1,4 @@
-﻿using Abstracciones.Interfaces.API;
+using Abstracciones.Interfaces.API;
 using Abstracciones.Interfaces.Flujo;
 using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
@@ -8,9 +8,7 @@ namespace API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class ClienteController : ControllerBase, IClienteController
-
     {
-
         private IClienteFlujo _clienteFlujo;
         private ILogger<ClienteController> _logger;
 
@@ -20,34 +18,50 @@ namespace API.Controllers
             _logger = logger;
         }
 
-        public Task<IActionResult> Agregar(ClienteRequest cliente)
+        [HttpGet]
+        public async Task<IActionResult> Obtener()
         {
-            throw new NotImplementedException();
+            var resultado = await _clienteFlujo.Obtener();
+            if (!resultado.Any())
+            {
+                return NoContent();
+            }
+            return Ok(resultado);
         }
 
-        public Task<IActionResult> Buscar(string busqueda)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Obtener(int id)
         {
-            throw new NotImplementedException();
+            var resultado = await _clienteFlujo.Obtener(id);
+            return Ok(resultado);
         }
 
-        public Task<IActionResult> Desactivar(int id)
+        [HttpGet("buscar")]
+        public async Task<IActionResult> Buscar(string busqueda)
         {
-            throw new NotImplementedException();
+            var resultado = await _clienteFlujo.Buscar(busqueda);
+            return Ok(resultado);
         }
 
-        public Task<IActionResult> Editar(int id, ClienteRequest cliente)
+        [HttpPost]
+        public async Task<IActionResult> Agregar(ClienteRequest cliente)
         {
-            throw new NotImplementedException();
+            var resultado = await _clienteFlujo.Agregar(cliente);
+            return Ok(resultado);
         }
 
-        public Task<IActionResult> Obtener()
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Editar(int id, ClienteRequest cliente)
         {
-            throw new NotImplementedException();
+            var resultado = await _clienteFlujo.Editar(id, cliente);
+            return Ok(resultado);
         }
 
-        public Task<IActionResult> Obtener(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Desactivar(int id)
         {
-            throw new NotImplementedException();
+            var resultado = await _clienteFlujo.Desactivar(id);
+            return Ok(resultado);
         }
     }
 }
