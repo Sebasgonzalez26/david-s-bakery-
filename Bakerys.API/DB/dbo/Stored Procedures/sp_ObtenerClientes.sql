@@ -1,25 +1,19 @@
-﻿
--- =====================================================================
--- SP 2: sp_ObtenerClientes
--- Lista todos los clientes activos.
--- Si se pasa @Busqueda, filtra por nombre o teléfono.
--- =====================================================================
-CREATE   PROCEDURE sp_ObtenerClientes
+﻿CREATE PROCEDURE sp_ObtenerClientes
     @Busqueda NVARCHAR(100) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        ClienteId,
+        ClienteId     AS Id,
         Nombre,
         Telefono,
         Email,
         Notas,
+        Activo,
         FechaRegistro
     FROM Clientes
-    WHERE Activo = 1
-      AND (
+    WHERE (
             @Busqueda IS NULL
             OR Nombre   LIKE '%' + @Busqueda + '%'
             OR Telefono LIKE '%' + @Busqueda + '%'

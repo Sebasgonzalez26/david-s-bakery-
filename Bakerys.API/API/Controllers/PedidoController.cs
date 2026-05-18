@@ -1,7 +1,6 @@
-﻿using Abstracciones.Interfaces.API;
+using Abstracciones.Interfaces.API;
 using Abstracciones.Interfaces.Flujo;
 using Abstracciones.Modelos;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,7 +9,6 @@ namespace API.Controllers
     [ApiController]
     public class PedidoController : ControllerBase, IPedidoController
     {
-
         private IPedidoFlujo _pedidoFlujo;
         private ILogger<PedidoController> _logger;
 
@@ -20,44 +18,60 @@ namespace API.Controllers
             _logger = logger;
         }
 
-        public Task<IActionResult> ActualizarEstado(int id, int estadoId)
+        [HttpGet]
+        public async Task<IActionResult> Obtener()
         {
-            throw new NotImplementedException();
+            var resultado = await _pedidoFlujo.Obtener();
+            return Ok(resultado);
         }
 
-        public Task<IActionResult> Agregar(PedidoRequest pedido)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Obtener(int id)
         {
-            throw new NotImplementedException();
+            var resultado = await _pedidoFlujo.Obtener(id);
+            return Ok(resultado);
         }
 
-        public Task<IActionResult> AgregarDetalle(DetallePedidoRequest detalle)
+        [HttpGet("buscar")]
+        public async Task<IActionResult> Buscar(string? busqueda, int? estadoId, DateTime? fechaDesde, DateTime? fechaHasta)
         {
-            throw new NotImplementedException();
+            var resultado = await _pedidoFlujo.Buscar(busqueda, estadoId, fechaDesde, fechaHasta);
+            return Ok(resultado);
         }
 
-        public Task<IActionResult> Buscar(string? busqueda, int? estadoId, DateOnly? fechaDesde, DateOnly? fechaHasta)
+        [HttpPost]
+        public async Task<IActionResult> Agregar(PedidoRequest pedido)
         {
-            throw new NotImplementedException();
+            var resultado = await _pedidoFlujo.Agregar(pedido);
+            return Ok(resultado);
         }
 
-        public Task<IActionResult> Cancelar(int id, string? motivo)
+        [HttpPut("{id}/estado")]
+        public async Task<IActionResult> ActualizarEstado(int id, int estadoId)
         {
-            throw new NotImplementedException();
+            var resultado = await _pedidoFlujo.ActualizarEstado(id, estadoId);
+            return Ok(resultado);
         }
 
-        public Task<IActionResult> Obtener()
+        [HttpPut("{id}/cancelar")]
+        public async Task<IActionResult> Cancelar(int id, string? motivo)
         {
-            throw new NotImplementedException();
+            var resultado = await _pedidoFlujo.Cancelar(id, motivo);
+            return Ok(resultado);
         }
 
-        public Task<IActionResult> Obtener(int id)
+        [HttpPost("detalle")]
+        public async Task<IActionResult> AgregarDetalle(DetallePedidoRequest detalle)
         {
-            throw new NotImplementedException();
+            var resultado = await _pedidoFlujo.AgregarDetalle(detalle);
+            return Ok(resultado);
         }
 
-        public Task<IActionResult> ObtenerEstados()
+        [HttpGet("estados")]
+        public async Task<IActionResult> ObtenerEstados()
         {
-            throw new NotImplementedException();
+            var resultado = await _pedidoFlujo.ObtenerEstados();
+            return Ok(resultado);
         }
     }
 }

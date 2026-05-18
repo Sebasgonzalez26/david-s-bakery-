@@ -1,5 +1,6 @@
 ﻿
 
+using Abstracciones.Interfaces.DA;
 using Abstracciones.Interfaces.Flujo;
 using Abstracciones.Modelos;
 
@@ -17,42 +18,42 @@ namespace Flujo
 
         public Task<int> ActualizarEstado(int id, int estadoId)
         {
-            throw new NotImplementedException();
+            return _pedidoDA.ActualizarEstado(id, estadoId);
         }
 
         public Task<int> Agregar(PedidoRequest pedido)
         {
-            throw new NotImplementedException();
+            return _pedidoDA.Agregar(pedido);
         }
 
         public Task<int> AgregarDetalle(DetallePedidoRequest detalle)
         {
-            throw new NotImplementedException();
+            return _pedidoDA.AgregarDetalle(detalle);
         }
 
-        public Task<IEnumerable<PedidoResponse>> Buscar(string? busqueda, int? estadoId, DateOnly? fechaDesde, DateOnly? fechaHasta)
+        public Task<IEnumerable<PedidoResponse>> Buscar(string? busqueda, int? estadoId, DateTime? fechaDesde, DateTime? fechaHasta)
         {
-            throw new NotImplementedException();
+            return _pedidoDA.Buscar(busqueda, estadoId, fechaDesde, fechaHasta);
         }
 
         public Task<int> Cancelar(int id, string? motivo)
         {
-            throw new NotImplementedException();
+            return _pedidoDA.Cancelar(id, motivo);
         }
 
         public Task<IEnumerable<PedidoResponse>> Obtener()
         {
-            throw new NotImplementedException();
+            return _pedidoDA.Obtener();
         }
 
-        public Task<PedidoResponse> Obtener(int id)
+        public Task<PedidoResponse?> Obtener(int id)
         {
-            throw new NotImplementedException();
+            return _pedidoDA.Obtener(id);
         }
 
         public Task<IEnumerable<EstadoPedidoResponse>> ObtenerEstados()
         {
-            throw new NotImplementedException();
+            return _pedidoDA.ObtenerEstados();
         }
     }
 }

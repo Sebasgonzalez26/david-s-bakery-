@@ -1,11 +1,28 @@
+using Abstracciones.Interfaces.DA;
+using Abstracciones.Interfaces.Flujo;
+using DA;
+using DA.Repositorios;
+using Flujo;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Repositorio
+builder.Services.AddSingleton<IRepositorioDapper, RepositorioDapper>();
+
+// DA
+builder.Services.AddScoped<IClienteDA, ClienteDA>();
+builder.Services.AddScoped<IPedidoDA, PedidoDA>();
+builder.Services.AddScoped<IPagoDA, PagoDA>();
+
+// Flujo
+builder.Services.AddScoped<IClienteFlujo, ClienteFlujo>();
+builder.Services.AddScoped<IPedidoFlujo, PedidoFlujo>();
+builder.Services.AddScoped<IPagoFlujo, PagoFlujo>();
 
 var app = builder.Build();
 

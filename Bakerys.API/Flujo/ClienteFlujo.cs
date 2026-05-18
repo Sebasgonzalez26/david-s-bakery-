@@ -16,32 +16,32 @@ namespace Flujo
 
         public Task<int> Agregar(ClienteRequest cliente)
         {
-            throw new NotImplementedException();
+            return _clienteDA.Agregar(cliente);
         }
 
         public Task<IEnumerable<ClienteResponse>> Buscar(string busqueda)
         {
-            throw new NotImplementedException();
+            return _clienteDA.Buscar(busqueda);
         }
 
         public Task<int> Desactivar(int id)
         {
-            throw new NotImplementedException();
+            return _clienteDA.Desactivar(id);
         }
 
         public Task<int> Editar(int id, ClienteRequest cliente)
         {
-            throw new NotImplementedException();
+            return _clienteDA.Editar(id, cliente);
         }
 
         public Task<IEnumerable<ClienteResponse>> Obtener()
         {
-            throw new NotImplementedException();
+            return _clienteDA.Obtener();
         }
 
-        public Task<ClienteResponse> Obtener(int id)
+        public Task<ClienteResponse?> Obtener(int id)
         {
-            throw new NotImplementedException();
+            return _clienteDA.Obtener(id);
         }
     }
 }
