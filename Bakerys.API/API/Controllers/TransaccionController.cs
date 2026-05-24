@@ -36,7 +36,7 @@ namespace API.Controllers
         public async Task<IActionResult> Registrar(TransaccionRequest transaccion)
         {
             var resultado = await _transaccionFlujo.Registrar(transaccion);
-            return Ok(resultado);
+            return CreatedAtAction(nameof(Obtener), new { id = resultado }, resultado);
         }
 
         [HttpPut("{id}")]

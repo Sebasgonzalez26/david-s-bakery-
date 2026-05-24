@@ -47,7 +47,7 @@ namespace API.Controllers
         public async Task<IActionResult> Agregar(ClienteRequest cliente)
         {
             var resultado = await _clienteFlujo.Agregar(cliente);
-            return Ok(resultado);
+            return CreatedAtAction(nameof(Obtener), new { id = resultado }, resultado);
         }
 
         [HttpPut("{id}")]

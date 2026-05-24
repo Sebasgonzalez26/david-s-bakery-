@@ -29,7 +29,7 @@ namespace API.Controllers
         public async Task<IActionResult> Registrar(MovimientoInventarioRequest movimiento)
         {
             var resultado = await _movimientoFlujo.Registrar(movimiento);
-            return Ok(resultado);
+            return CreatedAtAction(nameof(ObtenerPorProducto), new { productoId = movimiento.ProductoId }, resultado);
         }
     }
 }
