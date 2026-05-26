@@ -22,7 +22,7 @@ namespace API.Controllers
         public async Task<IActionResult> Agregar(PagoRequest pago)
         {
             var resultado = await _pagoFlujo.Agregar(pago);
-            return Ok(resultado);
+            return CreatedAtAction(nameof(ObtenerPorPedido), new { pedidoId = pago.PedidoId }, resultado);
         }
 
         [HttpGet("pedido/{pedidoId}")]

@@ -36,7 +36,7 @@ namespace API.Controllers
         public async Task<IActionResult> Agregar(ProductoRequest producto)
         {
             var resultado = await _productoFlujo.Agregar(producto);
-            return Ok(resultado);
+            return CreatedAtAction(nameof(Obtener), new { id = resultado }, resultado);
         }
 
         [HttpPut("{id}")]

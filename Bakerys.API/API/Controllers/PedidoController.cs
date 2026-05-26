@@ -43,7 +43,7 @@ namespace API.Controllers
         public async Task<IActionResult> Agregar(PedidoRequest pedido)
         {
             var resultado = await _pedidoFlujo.Agregar(pedido);
-            return Ok(resultado);
+            return CreatedAtAction(nameof(Obtener), new { id = resultado }, resultado);
         }
 
         [HttpPut("{id}/estado")]
@@ -64,7 +64,7 @@ namespace API.Controllers
         public async Task<IActionResult> AgregarDetalle(DetallePedidoRequest detalle)
         {
             var resultado = await _pedidoFlujo.AgregarDetalle(detalle);
-            return Ok(resultado);
+            return CreatedAtAction(nameof(Obtener), new { id = detalle.PedidoId }, resultado);
         }
 
         [HttpGet("estados")]
