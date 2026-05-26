@@ -1,0 +1,797 @@
+{
+  "info": {
+    "_postman_id": "1e429f7d-258d-41d6-9c14-f6711f8ed25b",
+    "name": "David's Bakery API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51910519",
+    "_collection_link": "https://go.postman.co/collection/51910519-1e429f7d-258d-41d6-9c14-f6711f8ed25b?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Cliente",
+      "item": [
+        {
+          "name": "ObtenerTodos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Cliente",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Cliente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ObtenerPorId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Cliente/1",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Cliente",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Cliente/buscar?busqueda=Maria",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Cliente",
+                "buscar"
+              ],
+              "query": [
+                {
+                  "key": "busqueda",
+                  "value": "Maria"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\": \"Ana López\",\r\n    \"telefono\": \"7777-9999\",\r\n    \"email\": \"ana@gmail.com\",\r\n    \"notas\": \"Clienta VIP\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7020/api/Cliente",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Cliente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7020/api/Cliente/1",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Cliente",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Cliente/2",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Cliente",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pedido",
+      "item": [
+        {
+          "name": "ObtenerTodos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Pedido",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Pedido"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ObtenerPorId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Pedido/1",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Pedido",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Pedido/buscar?busqueda=María&estadoId=1&fechaDesde=2026-05-01&fechaHasta=2026-05-31",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Pedido",
+                "buscar"
+              ],
+              "query": [
+                {
+                  "key": "busqueda",
+                  "value": "María"
+                },
+                {
+                  "key": "estadoId",
+                  "value": "1"
+                },
+                {
+                  "key": "fechaDesde",
+                  "value": "2026-05-01"
+                },
+                {
+                  "key": "fechaHasta",
+                  "value": "2026-05-31"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"clienteId\": 1,\r\n    \"fechaEntrega\": \"2026-06-15T00:00:00\",\r\n    \"montoTotal\": 350.00,\r\n    \"imagenReferenciaUrl\": null,\r\n    \"notas\": \"Pastel de quinceañera\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7020/api/Pedido",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Pedido"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Estados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Pedido/estados",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Pedido",
+                "estados"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar Detalle",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"pedidoId\": 1,\r\n    \"descripcion\": \"Pastel principal\",\r\n    \"sabor\": \"Chocolate\",\r\n    \"tamanio\": \"Grande\",\r\n    \"decoracion\": \"Flores blancas\",\r\n    \"cantidad\": 1,\r\n    \"precioUnitario\": 200.00\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7020/api/Pedido/detalle",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Pedido",
+                "detalle"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Estado",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Pedido/1/estado?estadoId=2",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Pedido",
+                "1",
+                "estado"
+              ],
+              "query": [
+                {
+                  "key": "estadoId",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancelar",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Pedido/2/cancelar?motivo=Cliente canceló el pedido",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Pedido",
+                "2",
+                "cancelar"
+              ],
+              "query": [
+                {
+                  "key": "motivo",
+                  "value": "Cliente canceló el pedido"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pago",
+      "item": [
+        {
+          "name": "Agregar Pago",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"pedidoId\": 3,\r\n    \"monto\": 100.00,\r\n    \"tipoPago\": \"Adelanto\",\r\n    \"comprobanteUrl\": null,\r\n    \"notas\": \"Primer adelanto\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7020/api/Pago",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Pago"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtner pagos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Pago/pedido/1",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Pago",
+                "pedido",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "saldo pendiente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Pago/pedido/1/saldo",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Pago",
+                "pedido",
+                "1",
+                "saldo"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Producto",
+      "item": [
+        {
+          "name": "Obtener todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Producto",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Producto"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Producto/1\n",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Producto",
+                "1\n"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\": \"Azúcar\",\r\n    \"categoria\": \"Ingrediente\",\r\n    \"unidadMedida\": \"kg\",\r\n    \"stockActual\": 15,\r\n    \"stockMinimo\": 3,\r\n    \"precioUnitario\": 800\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7020/api/Producto",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Producto"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\": \"Harina\",\r\n    \"categoria\": \"Ingrediente\",\r\n    \"unidadMedida\": \"kg\",\r\n    \"stockMinimo\": 3,\r\n    \"precioUnitario\": 1600\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "PUT https://localhost:7020/api/Producto/1",
+              "protocol": "PUT https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Producto",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Desactivar",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Producto/1",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Producto",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Movimiento Inventario",
+      "item": [
+        {
+          "name": "Obtener por producto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/MovimientoInventario/producto/1",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "MovimientoInventario",
+                "producto",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar entrada",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"productoId\": 2,\r\n    \"tipoMovimiento\": \"Entrada\",\r\n    \"cantidad\": 5,\r\n    \"notas\": \"Compra de harina\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7020/api/MovimientoInventario",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "MovimientoInventario"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar salida",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"productoId\": 2,\r\n    \"tipoMovimiento\": \"Salida\",\r\n    \"cantidad\": 2,\r\n    \"notas\": \"Usado para pedido #3\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7020/api/MovimientoInventario",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "MovimientoInventario"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transaccion",
+      "item": [
+        {
+          "name": "Obtener todos",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Transaccion/1",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Transaccion",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Resumen",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"tipo\": \"Gasto\",\r\n    \"categoria\": \"Ingredientes\",\r\n    \"descripcion\": \"Compra de azúcar\",\r\n    \"monto\": 12000,\r\n    \"fecha\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7020/api/Transaccion",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Transaccion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"tipo\": \"Gasto\",\r\n    \"categoria\": \"Ingredientes\",\r\n    \"descripcion\": \"Compra de azúcar actualizada\",\r\n    \"monto\": 15000,\r\n    \"fecha\": \"2026-05-18T00:00:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7020/api/Transaccion/1",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Transaccion",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7020/api/Transaccion/1",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7020",
+              "path": [
+                "api",
+                "Transaccion",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
