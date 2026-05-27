@@ -14,63 +14,56 @@
 </head>
 <body class="db-body">
 
-    <!-- Sidebar -->
-    <aside class="db-sidebar">
-        <div class="db-sidebar-brand">
-            <div class="db-brand-icon">DB</div>
-            <div class="db-brand-text">
-                <span class="db-brand-name">Davi's Bakery</span>
-                <span class="db-brand-sub">Encanto Pastelero</span>
-            </div>
-        </div>
+    <!-- Navbar -->
+    <header class="db-navbar">
+        <div class="db-navbar-inner">
 
-        <nav class="db-nav">
-            <p class="db-nav-label">Principal</p>
-            <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Dashboard" ? "active" : "")" asp-page="/Bakery/Index">
-                <i class="bi bi-grid-1x2"></i> Dashboard
+            <!-- Brand -->
+            <a class="db-navbar-brand" asp-page="/Bakery/Index">
+                <div class="db-brand-icon">DB</div>
+                <div class="db-brand-text">
+                    <span class="db-brand-name">Davi's Bakery</span>
+                    <span class="db-brand-sub">Encanto Pastelero</span>
+                </div>
             </a>
 
-            <p class="db-nav-label">Gestión</p>
-            <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Clientes" ? "active" : "")" asp-page="/Clientes/Index">
-                <i class="bi bi-people"></i> Clientes
-            </a>
-            <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Pedidos" ? "active" : "")" asp-page="/Pedidos/Index">
-                <i class="bi bi-box-seam"></i> Pedidos
-            </a>
-            <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Pagos" ? "active" : "")" asp-page="/Pagos/Index">
-                <i class="bi bi-credit-card"></i> Pagos
-            </a>
+            <!-- Nav links -->
+            <nav class="db-nav">
+                <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Dashboard"  ? "active" : "")" asp-page="/Bakery/Index">
+                    <i class="bi bi-grid-1x2"></i> Dashboard
+                </a>
+                <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Clientes"   ? "active" : "")" asp-page="/Clientes/Index">
+                    <i class="bi bi-people"></i> Clientes
+                </a>
+                <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Pedidos"    ? "active" : "")" asp-page="/Pedidos/Index">
+                    <i class="bi bi-box-seam"></i> Pedidos
+                </a>
+                <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Pagos"      ? "active" : "")" asp-page="/Pagos/Index">
+                    <i class="bi bi-credit-card"></i> Pagos
+                </a>
+                <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Inventario" ? "active" : "")" asp-page="/Inventario/Index">
+                    <i class="bi bi-archive"></i> Inventario
+                </a>
+                <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Finanzas"   ? "active" : "")" asp-page="/Finanzas/Index">
+                    <i class="bi bi-bar-chart-line"></i> Finanzas
+                </a>
+            </nav>
 
-            <p class="db-nav-label">Operaciones</p>
-            <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Inventario" ? "active" : "")" asp-page="/Inventario/Index">
-                <i class="bi bi-archive"></i> Inventario
-            </a>
-            <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Finanzas" ? "active" : "")" asp-page="/Finanzas/Index">
-                <i class="bi bi-bar-chart-line"></i> Finanzas
-            </a>
-        </nav>
-
-        <div class="db-sidebar-footer">
-            <i class="bi bi-c-circle"></i> 2026 Davi's Bakery
-        </div>
-    </aside>
-
-    <!-- Main -->
-    <div class="db-main">
-        <header class="db-topbar">
-            <h1 class="db-topbar-title">@ViewData["Title"]</h1>
-            <div class="db-topbar-right">
+            <!-- Right -->
+            <div class="db-navbar-right">
                 <span class="db-topbar-date">
                     <i class="bi bi-calendar3"></i>
-                    @DateTime.Now.ToString("dd 'de' MMMM, yyyy", new System.Globalization.CultureInfo("es-CR"))
+                    @DateTime.Now.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("es-CR"))
                 </span>
             </div>
-        </header>
 
-        <main class="db-content">
-            @RenderBody()
-        </main>
-    </div>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <main class="db-content">
+        @RenderBody()
+    </main>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
