@@ -1,0 +1,196 @@
+@page
+@model Web.Pages.Bakery.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["Page"]  = "Dashboard";
+}
+
+<!-- KPIs -->
+<div class="db-kpi-grid">
+
+    <div class="db-kpi-card kpi-brown">
+        <div class="db-kpi-header">
+            <span class="db-kpi-label">Clientes</span>
+            <div class="db-kpi-icon"><i class="bi bi-people-fill"></i></div>
+        </div>
+        <div class="db-kpi-value">@Model.TotalClientes</div>
+        <div class="db-kpi-sub">clientes registrados</div>
+    </div>
+
+    <div class="db-kpi-card kpi-gold">
+        <div class="db-kpi-header">
+            <span class="db-kpi-label">Pedidos Activos</span>
+            <div class="db-kpi-icon"><i class="bi bi-box-seam-fill"></i></div>
+        </div>
+        <div class="db-kpi-value">@Model.PedidosActivos</div>
+        <div class="db-kpi-sub">@Model.PedidosPendientes pendiente(s) de atender</div>
+    </div>
+
+    <div class="db-kpi-card kpi-green">
+        <div class="db-kpi-header">
+            <span class="db-kpi-label">Ingresos del mes</span>
+            <div class="db-kpi-icon"><i class="bi bi-graph-up-arrow"></i></div>
+        </div>
+        <div class="db-kpi-value">
+            @if (Model.Resumen != null)
+            {
+                <span>&#8353;@Model.Resumen.TotalIngresos.ToString("N0")</span>
+            }
+            else
+            {
+                <span>—</span>
+            }
+        </div>
+        <div class="db-kpi-sub">
+            @if (Model.Resumen != null)
+            {
+                <span>Balance: &#8353;@Model.Resumen.BalanceNeto.ToString("N0")</span>
+            }
+            else
+            {
+                <span>sin datos este mes</span>
+            }
+        </div>
+    </div>
+
+    <div class="db-kpi-card kpi-red">
+        <div class="db-kpi-header">
+            <span class="db-kpi-label">Stock Bajo</span>
+            <div class="db-kpi-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+        </div>
+        <div class="db-kpi-value">@Model.ProductosStockBajo</div>
+        <div class="db-kpi-sub">
+            @(Model.ProductosStockBajo == 0 ? "inventario en orden" : "producto(s) requieren atención")
+        </div>
+    </div>
+
+</div>
+
+<!-- Segunda fila: Pedidos recientes + Alertas -->
+<div class="db-grid-2">
+
+    <!-- Pedidos recientes -->
+    <div class="db-card">
+        <div class="db-card-header">
+            <h2 class="db-card-title"><i class="bi bi-clock-history"></i> Pedidos Recientes</h2>
+            <a href="/Pedidos/Index" class="db-btn db-btn-outline db-btn-sm">Ver todos</a>
+        </div>
+        <div>
+            @if (Model.Pedidos.Any())
+            {
+                <table class="db-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Cliente</th>
+                            <th>Entrega</th>
+                            <th>Estado</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var pedido in Model.Pedidos.OrderByDescending(p => p.FechaCreacion).Take(6))
+                        {
+                            <tr>
+                                <td><span style="color:var(--text-muted); font-size:12px;">#@pedido.Id</span></td>
+                                <td>
+                                    <strong>@pedido.Cliente</strong><br>
+                                    <span style="font-size:11px; color:var(--text-muted);">@pedido.Telefono</span>
+                                </td>
+                                <td style="font-size:12.5px;">@pedido.FechaEntrega.ToString("dd MMM yyyy")</td>
+                                <td>
+                                    @{
+                                        var badgeClass = pedido.Estado switch
+                                        {
+                                            "Pendiente"   => "db-badge-warning",
+                                            "En Proceso"  => "db-badge-blue",
+                                            "Listo"       => "db-badge-gold",
+                                            "Entregado"   => "db-badge-green",
+                                            "Cancelado"   => "db-badge-red",
+                                            _             => "db-badge-brown"
+                                        };
+                                    }
+                                    <span class="db-badge @badgeClass">@pedido.Estado</span>
+                                </td>
+                                <td style="font-weight:500;">&#8353;@pedido.MontoTotal.ToString("N0")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="db-empty">
+                    <i class="bi bi-box-seam"></i>
+                    <p>No hay pedidos registrados aún</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Panel derecho: Stock bajo + Accesos rápidos -->
+    <div>
+
+        <!-- Alertas de stock -->
+        <div class="db-card" style="margin-bottom:20px;">
+            <div class="db-card-header">
+                <h2 class="db-card-title"><i class="bi bi-exclamation-triangle"></i> Alertas de Inventario</h2>
+                <a href="/Inventario/Index" class="db-btn db-btn-outline db-btn-sm">Ver inventario</a>
+            </div>
+            <div class="db-card-body">
+                @if (Model.StockBajo.Any())
+                {
+                    @foreach (var producto in Model.StockBajo.Take(5))
+                    {
+                        var porcentaje = producto.StockMinimo > 0
+                            ? (int)Math.Min((producto.StockActual / producto.StockMinimo) * 100, 100)
+                            : 100;
+                        <div style="margin-bottom:14px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-size:13px; font-weight:500;">@producto.Nombre</span>
+                                <span class="db-badge db-badge-red" style="font-size:11px;">
+                                    @producto.StockActual @producto.UnidadMedida
+                                </span>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin:3px 0;">
+                                Mínimo: @producto.StockMinimo @producto.UnidadMedida
+                            </div>
+                            <div class="db-stock-bar">
+                                <div class="db-stock-bar-fill low" style="width:@(porcentaje)%"></div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="db-alert db-alert-success">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Todo el inventario está en orden
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Accesos rápidos -->
+        <div class="db-card">
+            <div class="db-card-header">
+                <h2 class="db-card-title"><i class="bi bi-lightning-charge"></i> Accesos Rápidos</h2>
+            </div>
+            <div class="db-card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <a href="/Clientes/Agregar" class="db-btn db-btn-outline" style="justify-content:center; padding:12px;">
+                    <i class="bi bi-person-plus"></i> Nuevo Cliente
+                </a>
+                <a href="/Pedidos/Agregar" class="db-btn db-btn-primary" style="justify-content:center; padding:12px;">
+                    <i class="bi bi-plus-circle"></i> Nuevo Pedido
+                </a>
+                <a href="/Pagos/Index" class="db-btn db-btn-outline" style="justify-content:center; padding:12px;">
+                    <i class="bi bi-credit-card"></i> Registrar Pago
+                </a>
+                <a href="/Finanzas/Index" class="db-btn db-btn-outline" style="justify-content:center; padding:12px;">
+                    <i class="bi bi-bar-chart-line"></i> Ver Finanzas
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
