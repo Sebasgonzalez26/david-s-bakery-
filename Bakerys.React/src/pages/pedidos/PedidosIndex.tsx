@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { Plus, Search, ShoppingBag } from 'lucide-react'
 import { pedidoService } from '../../services/pedidoService'
 import type { Pedido } from '../../types'
 
 const ESTADOS = ['Todos', 'Pendiente', 'En Proceso', 'Listo', 'Entregado', 'Cancelado']
 
-const fmtMoney = (n: number) => '₡' + n.toLocaleString('es-CR')
-const fmtDate  = (s: string) => new Date(s).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' })
-
-const badgeStyle = (estado: string): React.CSSProperties => {
-  const map: Record<string, { bg: string; color: string }> = {
-    'Pendiente':  { bg: 'rgba(212,132,42,0.12)',  color: '#d4842a' },
-    'En Proceso': { bg: 'rgba(74,122,181,0.12)',  color: '#4a7ab5' },
-    'Listo':      { bg: 'rgba(212,168,67,0.12)',  color: '#b8892a' },
-    'Entregado':  { bg: 'rgba(74,158,107,0.12)',  color: '#3a8558' },
-    'Cancelado':  { bg: 'rgba(201,64,64,0.12)',   color: '#c94040' },
-  }
-  const s = map[estado] ?? { bg: 'rgba(74,49,33,0.08)', color: '#6f4e32' }
-  return { display: 'inline-flex', padding: '3px 10px', borderRadius: 100, fontSize: 11, fontWeight: 500, background: s.bg, color: s.color }
+const estadoColor: Record<string, { bg: string; color: string }> = {
+  'Pendiente':  { bg: 'rgba(212,132,42,0.10)',  color: '#b86e10' },
+  'En Proceso': { bg: 'rgba(66,110,190,0.10)',  color: '#3a6ac4' },
+  'Listo':      { bg: 'rgba(160,100,20,0.10)',  color: '#8f621a' },
+  'Entregado':  { bg: 'rgba(40,140,90,0.10)',   color: '#28825a' },
+  'Cancelado':  { bg: 'rgba(180,40,40,0.10)',   color: '#b42a2a' },
 }
+
+const fmt = (n: number) => '₡' + n.toLocaleString('es-CR')
+const fmtDate = (s: string) => new Date(s).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' })
 
 export default function PedidosIndex() {
   const [pedidos, setPedidos] = useState<Pedido[]>([])
@@ -30,108 +28,117 @@ export default function PedidosIndex() {
     pedidoService.getAll().then(r => { setPedidos(r.data); setLoading(false) })
   }, [])
 
-  const filtrados = pedidos.filter(p => {
-    const matchEstado = filtroEstado === 'Todos' || p.estado === filtroEstado
-    const matchBusq = p.cliente.toLowerCase().includes(busqueda.toLowerCase()) || p.telefono.includes(busqueda)
-    return matchEstado && matchBusq
-  }).sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime())
+  const filtrados = pedidos
+    .filter(p => (filtroEstado === 'Todos' || p.estado === filtroEstado) &&
+      (p.cliente.toLowerCase().includes(busqueda.toLowerCase()) || p.telefono.includes(busqueda)))
+    .sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime())
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
+      {/* Header */}
+      <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
         <div>
-          <h1 style={pageTitle}>Pedidos</h1>
-          <p style={pageSub}>Gestión de pedidos y entregas</p>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 42, fontWeight: 400, color: 'hsl(var(--foreground))', letterSpacing: -0.5, lineHeight: 1, marginBottom: 5 }}>
+            Pedidos
+          </h1>
+          <p style={{ fontSize: 13, color: 'hsl(var(--muted-fg))' }}>{pedidos.length} pedidos registrados</p>
         </div>
-        <Link to="/pedidos/nuevo" style={primaryBtnStyle}>+ Nuevo Pedido</Link>
-      </div>
+        <Link to="/pedidos/nuevo" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'hsl(var(--foreground))', color: '#fff', borderRadius: 100, padding: '10px 20px', fontSize: 13, fontWeight: 500, textDecoration: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
+          <Plus size={14} /> Nuevo Pedido
+        </Link>
+      </motion.div>
 
-      {/* Filtros */}
-      <div style={{ display: 'flex', gap: 12, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
-        <input
-          type="text" placeholder="Buscar cliente…"
-          value={busqueda} onChange={e => setBusqueda(e.target.value)}
-          style={{ ...inputStyle, maxWidth: 260 }}
-        />
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+      {/* Filters */}
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.06 }}
+        style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ position: 'relative' }}>
+          <Search size={13} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'hsl(var(--muted-fg))' }} />
+          <input type="text" placeholder="Buscar cliente…" value={busqueda} onChange={e => setBusqueda(e.target.value)}
+            style={{ paddingLeft: 34, paddingRight: 16, paddingTop: 8, paddingBottom: 8, border: '1px solid hsl(var(--border))', borderRadius: 100, fontSize: 13, color: 'hsl(var(--foreground))', background: '#fff', outline: 'none', width: 240 }} />
+        </div>
+        <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
           {ESTADOS.map(e => (
             <button key={e} onClick={() => setFiltroEstado(e)} style={{
-              padding: '6px 14px', borderRadius: 100, fontSize: 12, fontWeight: 500,
-              border: filtroEstado === e ? '1px solid var(--brown-400)' : '1px solid var(--brown-200)',
-              background: filtroEstado === e ? 'var(--brown-800)' : '#fff',
-              color: filtroEstado === e ? '#fff' : 'var(--brown-500)',
-              cursor: 'pointer',
+              padding: '6px 13px', borderRadius: 100, fontSize: 12, fontWeight: 500, cursor: 'pointer',
+              border: filtroEstado === e ? '1px solid hsl(var(--foreground))' : '1px solid hsl(var(--border))',
+              background: filtroEstado === e ? 'hsl(var(--foreground))' : '#fff',
+              color: filtroEstado === e ? '#fff' : 'hsl(var(--muted-fg))',
+              transition: 'all 0.12s',
             }}>{e}</button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
-      <div style={cardStyle}>
-        {loading ? (
-          <div style={loadingStyle}>Cargando pedidos…</div>
-        ) : filtrados.length === 0 ? (
-          <div style={emptyStyle}><span style={{ fontSize: 32, marginBottom: 8 }}>📦</span><p>No hay pedidos</p></div>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--brown-100)' }}>
-                {['Cliente', 'Descripción', 'Entrega', 'Estado', 'Saldo', 'Total', 'Acciones'].map(h => (
-                  <th key={h} style={thStyle}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtrados.map((p, i) => (
-                <tr key={p.id} style={{ borderBottom: i < filtrados.length - 1 ? '1px solid var(--brown-50)' : 'none' }}>
-                  <td style={{ padding: '13px 16px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div style={avatarStyle}>{p.cliente.charAt(0).toUpperCase()}</div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--brown-800)' }}>{p.cliente}</div>
-                        <div style={{ fontSize: 11, color: 'var(--brown-300)' }}>{p.telefono}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style={{ ...tdStyle, maxWidth: 160 }}>
-                    <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 160 }}>
-                      {p.descripcion}
-                    </div>
-                  </td>
-                  <td style={tdStyle}>{fmtDate(p.fechaEntrega)}</td>
-                  <td style={{ padding: '13px 16px' }}><span style={badgeStyle(p.estado)}>{p.estado}</span></td>
-                  <td style={{ ...tdStyle, fontWeight: 500, color: p.saldoPendiente > 0 ? 'var(--red-500)' : 'var(--green-600)' }}>
-                    {fmtMoney(p.saldoPendiente)}
-                  </td>
-                  <td style={{ ...tdStyle, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 14 }}>
-                    {fmtMoney(p.montoTotal)}
-                  </td>
-                  <td style={{ padding: '13px 16px' }}>
-                    <Link to={`/pedidos/${p.id}/editar`} style={editBtnStyle}>Editar</Link>
-                  </td>
+      {/* Table */}
+      <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.12 }}>
+        <div style={{ background: '#fff', border: '1px solid hsl(var(--border))', borderRadius: 16, overflow: 'hidden', boxShadow: 'var(--shadow-card)' }}>
+          {loading ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '56px 20px', gap: 14 }}>
+              <div style={{ width: 28, height: 28, border: '2px solid hsl(var(--border))', borderTopColor: 'hsl(var(--accent))', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+              <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+            </div>
+          ) : filtrados.length === 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '56px 20px', gap: 10, color: 'hsl(var(--muted-fg))' }}>
+              <ShoppingBag size={32} strokeWidth={1} />
+              <span style={{ fontSize: 13 }}>No hay pedidos</span>
+            </div>
+          ) : (
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid hsl(var(--muted))' }}>
+                  {['Cliente', 'Descripción', 'Entrega', 'Estado', 'Saldo', 'Total', ''].map(h => (
+                    <th key={h} style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.7, textTransform: 'uppercase', color: 'hsl(var(--muted-fg))', textAlign: 'left', padding: '11px 18px', opacity: 0.7 }}>{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {!loading && (
-        <div style={{ marginTop: 12, fontSize: 12, color: 'var(--brown-300)', textAlign: 'right' }}>
-          {filtrados.length} de {pedidos.length} pedido(s)
+              </thead>
+              <tbody>
+                {filtrados.map((p, i) => {
+                  const st = estadoColor[p.estado] ?? { bg: 'hsl(var(--secondary))', color: 'hsl(var(--foreground))' }
+                  return (
+                    <tr key={p.id}
+                      style={{ borderBottom: i < filtrados.length - 1 ? '1px solid hsl(var(--muted))' : 'none', transition: 'background 0.1s' }}
+                      onMouseEnter={e => (e.currentTarget.style.background = 'hsl(var(--secondary))')}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                    >
+                      <td style={{ padding: '13px 18px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'hsl(var(--secondary))', border: '1px solid hsl(var(--border))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600, color: 'hsl(var(--foreground))', flexShrink: 0 }}>
+                            {p.cliente.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <div style={{ fontSize: 13, fontWeight: 500, color: 'hsl(var(--foreground))' }}>{p.cliente}</div>
+                            <div style={{ fontSize: 11, color: 'hsl(var(--muted-fg))' }}>{p.telefono}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td style={{ padding: '13px 18px', fontSize: 13, color: 'hsl(var(--muted-fg))', maxWidth: 160 }}>
+                        <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 150 }}>{p.descripcion}</div>
+                      </td>
+                      <td style={{ padding: '13px 18px', fontSize: 13, color: 'hsl(var(--muted-fg))' }}>{fmtDate(p.fechaEntrega)}</td>
+                      <td style={{ padding: '13px 18px' }}>
+                        <span style={{ ...st, display: 'inline-flex', padding: '3px 10px', borderRadius: 100, fontSize: 11, fontWeight: 500 }}>{p.estado}</span>
+                      </td>
+                      <td style={{ padding: '13px 18px', fontSize: 13, fontWeight: 500, color: p.saldoPendiente > 0 ? '#b42a2a' : '#28825a' }}>
+                        {fmt(p.saldoPendiente)}
+                      </td>
+                      <td style={{ padding: '13px 18px', fontFamily: 'var(--font-display)', fontSize: 15, color: 'hsl(var(--foreground))' }}>
+                        {fmt(p.montoTotal)}
+                      </td>
+                      <td style={{ padding: '13px 18px' }}>
+                        <Link to={`/pedidos/${p.id}/editar`} style={{ fontSize: 12, fontWeight: 500, padding: '4px 12px', border: '1px solid hsl(var(--border))', borderRadius: 100, color: 'hsl(var(--foreground))', textDecoration: 'none', background: '#fff', whiteSpace: 'nowrap' }}>
+                          Editar
+                        </Link>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
-      )}
+        {!loading && <p style={{ marginTop: 10, fontSize: 12, color: 'hsl(var(--muted-fg))', textAlign: 'right' }}>{filtrados.length} de {pedidos.length} pedido(s)</p>}
+      </motion.div>
     </div>
   )
 }
-
-const pageTitle: React.CSSProperties = { fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 400, color: 'var(--brown-800)', margin: '0 0 4px', letterSpacing: -0.5 }
-const pageSub: React.CSSProperties = { margin: 0, fontSize: 13, color: 'var(--brown-400)' }
-const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid rgba(212,184,150,0.25)', borderRadius: 16, overflow: 'hidden' }
-const primaryBtnStyle: React.CSSProperties = { display: 'inline-flex', alignItems: 'center', gap: 6, background: 'var(--brown-800)', color: '#fff', border: 'none', borderRadius: 100, padding: '10px 20px', fontSize: 13, fontWeight: 500, textDecoration: 'none' }
-const inputStyle: React.CSSProperties = { padding: '9px 16px', border: '1px solid var(--brown-200)', borderRadius: 100, fontSize: 13, color: 'var(--brown-800)', background: '#fff', outline: 'none' }
-const thStyle: React.CSSProperties = { fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 0.5, color: 'var(--brown-300)', textAlign: 'left', padding: '12px 16px' }
-const tdStyle: React.CSSProperties = { padding: '13px 16px', fontSize: 13, color: 'var(--brown-600)' }
-const avatarStyle: React.CSSProperties = { width: 32, height: 32, borderRadius: '50%', background: 'var(--brown-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600, color: 'var(--brown-600)', flexShrink: 0 }
-const editBtnStyle: React.CSSProperties = { fontSize: 12, fontWeight: 500, padding: '4px 12px', border: '1px solid var(--brown-200)', borderRadius: 100, color: 'var(--brown-600)', textDecoration: 'none' }
-const loadingStyle: React.CSSProperties = { padding: '60px 20px', textAlign: 'center', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, color: 'var(--brown-300)' }
-const emptyStyle: React.CSSProperties = { padding: '60px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'var(--brown-300)', fontSize: 13 }
