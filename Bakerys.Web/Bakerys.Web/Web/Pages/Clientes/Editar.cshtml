@@ -1,0 +1,66 @@
+@page "{id:int}"
+@model Web.Pages.Clientes.EditarModel
+@{
+    ViewData["Title"] = "Editar Cliente";
+    ViewData["Page"]  = "Clientes";
+}
+
+<div class="db-page-header">
+    <div>
+        <h1 class="db-page-title">Editar Cliente</h1>
+        <p class="db-page-sub">Modificá los datos de @Model.Cliente.Nombre</p>
+    </div>
+    <a asp-page="./Index" class="db-btn db-btn-outline">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</div>
+
+<div style="max-width: 600px;">
+    <div class="db-card">
+        <div class="db-card-header">
+            <h2 class="db-card-title"><i class="bi bi-pencil-square"></i> Datos del Cliente</h2>
+            <span style="font-size:12px; color:var(--text-muted);">ID: @Model.Cliente.Id</span>
+        </div>
+        <div class="db-card-body">
+            <form method="post">
+                <input type="hidden" asp-for="Cliente.Id" />
+
+                <div asp-validation-summary="ModelOnly" class="db-alert db-alert-danger" style="@(ViewData.ModelState.IsValid ? "display:none" : "")"></div>
+
+                <div class="db-form-group">
+                    <label class="db-form-label">Nombre completo *</label>
+                    <input asp-for="Cliente.Nombre" class="db-form-control" />
+                    <span asp-validation-for="Cliente.Nombre" style="color:var(--danger); font-size:12px;"></span>
+                </div>
+
+                <div class="db-form-group">
+                    <label class="db-form-label">Teléfono *</label>
+                    <input asp-for="Cliente.Telefono" class="db-form-control" />
+                    <span asp-validation-for="Cliente.Telefono" style="color:var(--danger); font-size:12px;"></span>
+                </div>
+
+                <div class="db-form-group">
+                    <label class="db-form-label">Email</label>
+                    <input asp-for="Cliente.Email" class="db-form-control" />
+                    <span asp-validation-for="Cliente.Email" style="color:var(--danger); font-size:12px;"></span>
+                </div>
+
+                <div class="db-form-group">
+                    <label class="db-form-label">Notas</label>
+                    <textarea asp-for="Cliente.Notas" class="db-form-control" rows="3"></textarea>
+                </div>
+
+                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:8px;">
+                    <a asp-page="./Index" class="db-btn db-btn-outline">Cancelar</a>
+                    <button type="submit" class="db-btn db-btn-primary">
+                        <i class="bi bi-check-lg"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
