@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { CreditCard, Plus } from 'lucide-react'
 import { pagoService } from '../../services/pagoService'
 import { pedidoService } from '../../services/pedidoService'
+import { FormCard, FormGroup, inputStyle, primaryBtnStyle, errorAlertStyle } from '../../components/FormShared'
 import type { Pago, Pedido } from '../../types'
 
-const fmtMoney = (n: number) => '₡' + n.toLocaleString('es-CR')
-const fmtDate  = (s: string) => new Date(s).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' })
+const fmt = (n: number) => '₡' + n.toLocaleString('es-CR')
+const fmtDate = (s: string) => new Date(s).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' })
 
 export default function PagosIndex() {
   const [pagos, setPagos] = useState<Pago[]>([])
@@ -30,133 +33,99 @@ export default function PagosIndex() {
     setSaving(true)
     try {
       await pagoService.create({ pedidoId: form.pedidoId, monto: Number(form.monto), metodoPago: form.metodoPago, notas: form.notas })
-      setShowForm(false)
-      setForm({ pedidoId: 0, monto: '', metodoPago: 'Efectivo', notas: '' })
-      setError('')
+      setShowForm(false); setForm({ pedidoId: 0, monto: '', metodoPago: 'Efectivo', notas: '' }); setError('')
       cargar()
-    } catch {
-      setError('Error al registrar el pago.')
-    } finally {
-      setSaving(false)
-    }
+    } catch { setError('Error al registrar el pago.') }
+    finally { setSaving(false) }
   }
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
+      {/* Header */}
+      <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
         <div>
-          <h1 style={pageTitle}>Pagos</h1>
-          <p style={pageSub}>Registro de pagos recibidos</p>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 42, fontWeight: 400, color: 'hsl(var(--foreground))', letterSpacing: -0.5, lineHeight: 1, marginBottom: 5 }}>Pagos</h1>
+          <p style={{ fontSize: 13, color: 'hsl(var(--muted-fg))' }}>{pagos.length} pagos registrados</p>
         </div>
-        <button onClick={() => setShowForm(!showForm)} style={primaryBtnStyle}>
-          {showForm ? '✕ Cancelar' : '+ Registrar Pago'}
+        <button onClick={() => setShowForm(!showForm)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: showForm ? 'hsl(var(--muted))' : 'hsl(var(--foreground))', color: showForm ? 'hsl(var(--foreground))' : '#fff', border: 'none', borderRadius: 100, padding: '10px 20px', fontSize: 13, fontWeight: 500, cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}>
+          <Plus size={14} /> {showForm ? 'Cancelar' : 'Registrar Pago'}
         </button>
-      </div>
+      </motion.div>
 
       {/* Form */}
       {showForm && (
-        <div style={{ maxWidth: 520, marginBottom: 24 }}>
-          <div style={cardStyle}>
-            <div style={cardHeader}><span style={cardTitle}>💳 Nuevo Pago</span></div>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} style={{ maxWidth: 520, marginBottom: 24 }}>
+          <FormCard title="Nuevo Pago">
             <form onSubmit={handleSubmit} style={{ padding: '24px' }}>
-              {error && <div style={errorStyle}>{error}</div>}
+              {error && <div style={errorAlertStyle}>{error}</div>}
               <FormGroup label="Pedido *">
-                <select style={inputStyle} value={form.pedidoId}
-                  onChange={e => setForm({ ...form, pedidoId: Number(e.target.value) })}>
+                <select style={inputStyle} value={form.pedidoId} onChange={e => setForm({ ...form, pedidoId: Number(e.target.value) })}>
                   <option value={0}>Seleccionar pedido…</option>
-                  {pedidos.map(p => (
-                    <option key={p.id} value={p.id}>
-                      #{p.id} — {p.cliente} (saldo: {fmtMoney(p.saldoPendiente)})
-                    </option>
-                  ))}
+                  {pedidos.map(p => <option key={p.id} value={p.id}>#{p.id} — {p.cliente} (saldo: {fmt(p.saldoPendiente)})</option>)}
                 </select>
               </FormGroup>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                 <FormGroup label="Monto (₡) *">
-                  <input type="number" min="0" step="100" style={inputStyle} value={form.monto}
-                    onChange={e => setForm({ ...form, monto: e.target.value })} />
+                  <input type="number" min="0" step="100" style={inputStyle} value={form.monto} onChange={e => setForm({ ...form, monto: e.target.value })} />
                 </FormGroup>
-                <FormGroup label="Método de Pago">
-                  <select style={inputStyle} value={form.metodoPago}
-                    onChange={e => setForm({ ...form, metodoPago: e.target.value })}>
-                    {['Efectivo', 'SINPE', 'Transferencia', 'Tarjeta'].map(m =>
-                      <option key={m} value={m}>{m}</option>
-                    )}
+                <FormGroup label="Método">
+                  <select style={inputStyle} value={form.metodoPago} onChange={e => setForm({ ...form, metodoPago: e.target.value })}>
+                    {['Efectivo','SINPE','Transferencia','Tarjeta'].map(m => <option key={m}>{m}</option>)}
                   </select>
                 </FormGroup>
               </div>
               <FormGroup label="Notas">
-                <input style={inputStyle} value={form.notas}
-                  onChange={e => setForm({ ...form, notas: e.target.value })} />
+                <input style={inputStyle} value={form.notas} onChange={e => setForm({ ...form, notas: e.target.value })} />
               </FormGroup>
-              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-                <button type="submit" disabled={saving} style={primaryBtnStyle}>
-                  {saving ? 'Guardando…' : '✓ Registrar'}
-                </button>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button type="submit" disabled={saving} style={primaryBtnStyle}>{saving ? 'Guardando…' : '✓ Registrar'}</button>
               </div>
             </form>
-          </div>
-        </div>
+          </FormCard>
+        </motion.div>
       )}
 
       {/* Table */}
-      <div style={cardStyle}>
-        {loading ? (
-          <div style={loadingStyle}>Cargando pagos…</div>
-        ) : pagos.length === 0 ? (
-          <div style={emptyStyle}><span style={{ fontSize: 32, marginBottom: 8 }}>💳</span><p>No hay pagos registrados</p></div>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--brown-100)' }}>
-                {['#', 'Cliente', 'Pedido', 'Monto', 'Método', 'Fecha'].map(h => (
-                  <th key={h} style={thStyle}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[...pagos].sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime()).map((p, i) => (
-                <tr key={p.id} style={{ borderBottom: i < pagos.length - 1 ? '1px solid var(--brown-50)' : 'none' }}>
-                  <td style={{ ...tdStyle, color: 'var(--brown-300)', fontSize: 12 }}>#{p.id}</td>
-                  <td style={tdStyle}>{p.clienteNombre}</td>
-                  <td style={{ ...tdStyle, color: 'var(--brown-400)' }}>Pedido #{p.pedidoId}</td>
-                  <td style={{ ...tdStyle, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 14, color: 'var(--green-600)' }}>
-                    {fmtMoney(p.monto)}
-                  </td>
-                  <td style={{ padding: '13px 16px' }}>
-                    <span style={{ display: 'inline-flex', padding: '3px 10px', borderRadius: 100, fontSize: 11, fontWeight: 500, background: 'rgba(74,49,33,0.07)', color: 'var(--brown-600)' }}>
-                      {p.metodoPago}
-                    </span>
-                  </td>
-                  <td style={tdStyle}>{fmtDate(p.fecha)}</td>
+      <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.1 }}>
+        <div style={{ background: '#fff', border: '1px solid hsl(var(--border))', borderRadius: 16, overflow: 'hidden', boxShadow: 'var(--shadow-card)' }}>
+          {loading ? (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '56px 20px' }}><div style={{ width: 28, height: 28, border: '2px solid hsl(var(--border))', borderTopColor: 'hsl(var(--accent))', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /><style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style></div>
+          ) : pagos.length === 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '56px 20px', gap: 10, color: 'hsl(var(--muted-fg))' }}>
+              <CreditCard size={32} strokeWidth={1} /><span style={{ fontSize: 13 }}>No hay pagos registrados</span>
+            </div>
+          ) : (
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid hsl(var(--muted))' }}>
+                  {['#', 'Cliente', 'Pedido', 'Monto', 'Método', 'Fecha'].map(h => (
+                    <th key={h} style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.7, textTransform: 'uppercase', color: 'hsl(var(--muted-fg))', textAlign: 'left', padding: '11px 18px', opacity: 0.7 }}>{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+              </thead>
+              <tbody>
+                {[...pagos].sort((a,b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime()).map((p, i) => (
+                  <tr key={p.id}
+                    style={{ borderBottom: i < pagos.length - 1 ? '1px solid hsl(var(--muted))' : 'none', transition: 'background 0.1s' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'hsl(var(--secondary))')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    <td style={{ padding: '13px 18px', fontSize: 12, color: 'hsl(var(--muted-fg))' }}>#{p.id}</td>
+                    <td style={{ padding: '13px 18px', fontSize: 13, fontWeight: 500, color: 'hsl(var(--foreground))' }}>{p.clienteNombre}</td>
+                    <td style={{ padding: '13px 18px', fontSize: 13, color: 'hsl(var(--muted-fg))' }}>Pedido #{p.pedidoId}</td>
+                    <td style={{ padding: '13px 18px', fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 400, color: '#28825a' }}>{fmt(p.monto)}</td>
+                    <td style={{ padding: '13px 18px' }}>
+                      <span style={{ display: 'inline-flex', padding: '3px 10px', borderRadius: 100, fontSize: 11, fontWeight: 500, background: 'hsl(var(--secondary))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--foreground))' }}>{p.metodoPago}</span>
+                    </td>
+                    <td style={{ padding: '13px 18px', fontSize: 13, color: 'hsl(var(--muted-fg))' }}>{fmtDate(p.fecha)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </motion.div>
     </div>
   )
 }
-
-function FormGroup({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div style={{ marginBottom: 18 }}>
-      <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: 'var(--brown-600)', marginBottom: 6 }}>{label}</label>
-      {children}
-    </div>
-  )
-}
-
-const pageTitle: React.CSSProperties = { fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 400, color: 'var(--brown-800)', margin: '0 0 4px', letterSpacing: -0.5 }
-const pageSub: React.CSSProperties = { margin: 0, fontSize: 13, color: 'var(--brown-400)' }
-const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid rgba(212,184,150,0.25)', borderRadius: 16, overflow: 'hidden' }
-const cardHeader: React.CSSProperties = { padding: '18px 24px', borderBottom: '1px solid var(--brown-50)', display: 'flex', alignItems: 'center' }
-const cardTitle: React.CSSProperties = { fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 500, color: 'var(--brown-800)' }
-const primaryBtnStyle: React.CSSProperties = { display: 'inline-flex', alignItems: 'center', gap: 6, background: 'var(--brown-800)', color: '#fff', border: 'none', borderRadius: 100, padding: '10px 20px', fontSize: 13, fontWeight: 500, cursor: 'pointer', textDecoration: 'none' }
-const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 14px', border: '1px solid var(--brown-200)', borderRadius: 10, fontSize: 13, color: 'var(--brown-800)', background: '#fff', outline: 'none', boxSizing: 'border-box' }
-const thStyle: React.CSSProperties = { fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 0.5, color: 'var(--brown-300)', textAlign: 'left', padding: '12px 16px' }
-const tdStyle: React.CSSProperties = { padding: '13px 16px', fontSize: 13, color: 'var(--brown-600)' }
-const errorStyle: React.CSSProperties = { background: 'rgba(201,64,64,0.08)', border: '1px solid rgba(201,64,64,0.2)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: 'var(--red-500)', marginBottom: 18 }
-const loadingStyle: React.CSSProperties = { padding: '60px 20px', textAlign: 'center', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, color: 'var(--brown-300)' }
-const emptyStyle: React.CSSProperties = { padding: '60px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'var(--brown-300)', fontSize: 13 }

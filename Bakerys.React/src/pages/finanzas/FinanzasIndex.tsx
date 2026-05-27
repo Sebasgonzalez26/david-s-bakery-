@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { TrendingUp, TrendingDown, Plus } from 'lucide-react'
 import { finanzasService } from '../../services/finanzasService'
+import { FormCard, FormGroup, inputStyle, primaryBtnStyle, errorAlertStyle } from '../../components/FormShared'
 import type { Transaccion, ResumenFinanciero } from '../../types'
 
-const fmtMoney = (n: number) => '₡' + n.toLocaleString('es-CR')
-const fmtDate  = (s: string) => new Date(s).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' })
+const fmt = (n: number) => '₡' + n.toLocaleString('es-CR')
+const fmtDate = (s: string) => new Date(s).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' })
 const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
 
 export default function FinanzasIndex() {
@@ -20,192 +23,154 @@ export default function FinanzasIndex() {
 
   const cargar = () => {
     setLoading(true)
-    Promise.all([
-      finanzasService.getResumen(mes, anio),
-      finanzasService.getAll(),
-    ]).then(([rRes, tRes]) => {
-      setResumen(rRes.data)
-      setTransacciones(tRes.data)
-      setLoading(false)
-    }).catch(() => setLoading(false))
+    Promise.all([finanzasService.getResumen(mes, anio), finanzasService.getAll()])
+      .then(([rRes, tRes]) => { setResumen(rRes.data); setTransacciones(tRes.data); setLoading(false) })
+      .catch(() => setLoading(false))
   }
-
   useEffect(() => { cargar() }, [mes, anio])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!form.descripcion || !form.monto || !form.fecha) { setError('Todos los campos son requeridos.'); return }
     setSaving(true)
-    try {
-      await finanzasService.create({
-        tipo: form.tipo,
-        descripcion: form.descripcion,
-        monto: Number(form.monto),
-        fecha: form.fecha,
-        categoria: form.categoria,
-      })
-      setShowForm(false)
-      setForm({ tipo: 'Ingreso', descripcion: '', monto: '', fecha: now.toISOString().split('T')[0], categoria: '' })
-      setError('')
-      cargar()
-    } catch { setError('Error al guardar.') }
-    finally { setSaving(false) }
+    try { await finanzasService.create({ tipo: form.tipo, descripcion: form.descripcion, monto: Number(form.monto), fecha: form.fecha, categoria: form.categoria }); setShowForm(false); setForm({ tipo: 'Ingreso', descripcion: '', monto: '', fecha: now.toISOString().split('T')[0], categoria: '' }); setError(''); cargar() }
+    catch { setError('Error al guardar.') } finally { setSaving(false) }
   }
 
-  const filtradas = transacciones.filter(t => {
-    const d = new Date(t.fecha)
-    return d.getMonth() + 1 === mes && d.getFullYear() === anio
-  }).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
+  const filtradas = transacciones
+    .filter(t => { const d = new Date(t.fecha); return d.getMonth() + 1 === mes && d.getFullYear() === anio })
+    .sort((a,b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
+      {/* Header */}
+      <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
         <div>
-          <h1 style={pageTitle}>Finanzas</h1>
-          <p style={pageSub}>Ingresos, gastos y balance</p>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 42, fontWeight: 400, color: 'hsl(var(--foreground))', letterSpacing: -0.5, lineHeight: 1, marginBottom: 5 }}>Finanzas</h1>
+          <p style={{ fontSize: 13, color: 'hsl(var(--muted-fg))' }}>Ingresos, gastos y balance mensual</p>
         </div>
-        <button onClick={() => setShowForm(!showForm)} style={primaryBtnStyle}>
-          {showForm ? '✕ Cancelar' : '+ Nueva Transacción'}
+        <button onClick={() => setShowForm(!showForm)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: showForm ? 'hsl(var(--muted))' : 'hsl(var(--foreground))', color: showForm ? 'hsl(var(--foreground))' : '#fff', border: 'none', borderRadius: 100, padding: '10px 20px', fontSize: 13, fontWeight: 500, cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}>
+          <Plus size={14} /> {showForm ? 'Cancelar' : 'Nueva Transacción'}
         </button>
-      </div>
+      </motion.div>
 
       {/* Selector mes/año */}
-      <div style={{ display: 'flex', gap: 10, marginBottom: 24, alignItems: 'center' }}>
-        <select style={{ ...inputStyle, width: 'auto' }} value={mes} onChange={e => setMes(Number(e.target.value))}>
-          {MESES.map((m, i) => <option key={i + 1} value={i + 1}>{m}</option>)}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.05 }}
+        style={{ display: 'flex', gap: 8, marginBottom: 20, alignItems: 'center' }}>
+        <select style={{ ...inputStyle, width: 'auto', borderRadius: 100 }} value={mes} onChange={e => setMes(Number(e.target.value))}>
+          {MESES.map((m,i) => <option key={i+1} value={i+1}>{m}</option>)}
         </select>
-        <select style={{ ...inputStyle, width: 'auto' }} value={anio} onChange={e => setAnio(Number(e.target.value))}>
-          {[2024, 2025, 2026].map(a => <option key={a} value={a}>{a}</option>)}
+        <select style={{ ...inputStyle, width: 'auto', borderRadius: 100 }} value={anio} onChange={e => setAnio(Number(e.target.value))}>
+          {[2024,2025,2026].map(a => <option key={a}>{a}</option>)}
         </select>
-      </div>
+      </motion.div>
 
       {/* KPIs */}
       {resumen && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
+        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.08 }}
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12, marginBottom: 20 }}>
           {[
-            { label: 'Ingresos', value: resumen.totalIngresos, color: 'var(--green-600)', icon: '↑' },
-            { label: 'Gastos', value: resumen.totalGastos, color: 'var(--red-500)', icon: '↓' },
-            { label: 'Balance Neto', value: resumen.balanceNeto, color: resumen.balanceNeto >= 0 ? 'var(--green-600)' : 'var(--red-500)', icon: '=' },
-          ].map((k, i) => (
-            <div key={i} style={{ ...cardStyle, padding: '22px 24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-                <span style={{ fontSize: 12, color: 'var(--brown-400)', fontWeight: 500 }}>{k.label}</span>
-                <span style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(74,49,33,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: k.color }}>{k.icon}</span>
+            { label: 'Ingresos', value: resumen.totalIngresos, color: '#28825a', icon: <TrendingUp size={15} />, bg: 'rgba(40,130,90,0.08)' },
+            { label: 'Gastos',   value: resumen.totalGastos,   color: '#b42a2a', icon: <TrendingDown size={15} />, bg: 'rgba(180,42,42,0.08)' },
+            { label: 'Balance',  value: resumen.balanceNeto,   color: resumen.balanceNeto >= 0 ? '#28825a' : '#b42a2a', icon: <TrendingUp size={15} />, bg: resumen.balanceNeto >= 0 ? 'rgba(40,130,90,0.08)' : 'rgba(180,42,42,0.08)' },
+          ].map((k,i) => (
+            <div key={i} style={{ background: '#fff', border: '1px solid hsl(var(--border))', borderRadius: 14, padding: '20px 22px', boxShadow: 'var(--shadow-card)', transition: 'box-shadow 0.18s, transform 0.18s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--shadow-md)'; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--shadow-card)'; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)' }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
+                <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: 0.3, textTransform: 'uppercase', color: 'hsl(var(--muted-fg))' }}>{k.label}</span>
+                <div style={{ width: 30, height: 30, borderRadius: 9, background: k.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: k.color }}>{k.icon}</div>
               </div>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 500, color: k.color, letterSpacing: -1 }}>
-                {fmtMoney(k.value)}
-              </div>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 30, fontWeight: 400, color: k.color, letterSpacing: -0.5, lineHeight: 1 }}>{fmt(k.value)}</div>
             </div>
           ))}
-        </div>
+        </motion.div>
       )}
 
       {/* Form */}
       {showForm && (
-        <div style={{ maxWidth: 520, marginBottom: 24 }}>
-          <div style={cardStyle}>
-            <div style={cardHeader}><span style={cardTitle}>💰 Nueva Transacción</span></div>
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} style={{ maxWidth: 520, marginBottom: 20 }}>
+          <FormCard title="Nueva Transacción">
             <form onSubmit={handleSubmit} style={{ padding: '24px' }}>
-              {error && <div style={errorStyle}>{error}</div>}
+              {error && <div style={errorAlertStyle}>{error}</div>}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                 <FormGroup label="Tipo">
                   <select style={inputStyle} value={form.tipo} onChange={e => setForm({ ...form, tipo: e.target.value })}>
-                    <option value="Ingreso">Ingreso</option>
-                    <option value="Gasto">Gasto</option>
+                    <option>Ingreso</option><option>Gasto</option>
                   </select>
                 </FormGroup>
                 <FormGroup label="Monto (₡) *">
-                  <input type="number" min="0" step="100" style={inputStyle} value={form.monto}
-                    onChange={e => setForm({ ...form, monto: e.target.value })} />
+                  <input type="number" min="0" step="100" style={inputStyle} value={form.monto} onChange={e => setForm({ ...form, monto: e.target.value })} />
                 </FormGroup>
               </div>
               <FormGroup label="Descripción *">
-                <input style={inputStyle} value={form.descripcion}
-                  onChange={e => setForm({ ...form, descripcion: e.target.value })} />
+                <input style={inputStyle} value={form.descripcion} onChange={e => setForm({ ...form, descripcion: e.target.value })} />
               </FormGroup>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                 <FormGroup label="Fecha *">
-                  <input type="date" style={inputStyle} value={form.fecha}
-                    onChange={e => setForm({ ...form, fecha: e.target.value })} />
+                  <input type="date" style={inputStyle} value={form.fecha} onChange={e => setForm({ ...form, fecha: e.target.value })} />
                 </FormGroup>
                 <FormGroup label="Categoría">
-                  <input style={inputStyle} placeholder="Ingredientes, ventas…" value={form.categoria}
-                    onChange={e => setForm({ ...form, categoria: e.target.value })} />
+                  <input style={inputStyle} placeholder="Ingredientes, ventas…" value={form.categoria} onChange={e => setForm({ ...form, categoria: e.target.value })} />
                 </FormGroup>
               </div>
-              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-                <button type="submit" disabled={saving} style={primaryBtnStyle}>
-                  {saving ? 'Guardando…' : '✓ Registrar'}
-                </button>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button type="submit" disabled={saving} style={primaryBtnStyle}>{saving ? 'Guardando…' : '✓ Registrar'}</button>
               </div>
             </form>
-          </div>
-        </div>
+          </FormCard>
+        </motion.div>
       )}
 
       {/* Table */}
-      <div style={cardStyle}>
-        {loading ? (
-          <div style={loadingStyle}>Cargando…</div>
-        ) : filtradas.length === 0 ? (
-          <div style={emptyStyle}><span style={{ fontSize: 32, marginBottom: 8 }}>💰</span><p>Sin transacciones este mes</p></div>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--brown-100)' }}>
-                {['Descripción', 'Categoría', 'Tipo', 'Fecha', 'Monto'].map(h => (
-                  <th key={h} style={thStyle}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtradas.map((t, i) => (
-                <tr key={t.id} style={{ borderBottom: i < filtradas.length - 1 ? '1px solid var(--brown-50)' : 'none' }}>
-                  <td style={{ ...tdStyle, fontWeight: 500, color: 'var(--brown-800)' }}>{t.descripcion}</td>
-                  <td style={tdStyle}>
-                    {t.categoria ? (
-                      <span style={{ display: 'inline-flex', padding: '2px 8px', borderRadius: 100, fontSize: 11, fontWeight: 500, background: 'rgba(74,49,33,0.07)', color: 'var(--brown-500)' }}>
-                        {t.categoria}
-                      </span>
-                    ) : <span style={{ color: 'var(--brown-200)' }}>—</span>}
-                  </td>
-                  <td style={{ padding: '13px 16px' }}>
-                    <span style={{ display: 'inline-flex', padding: '3px 10px', borderRadius: 100, fontSize: 11, fontWeight: 500, background: t.tipo === 'Ingreso' ? 'rgba(74,158,107,0.1)' : 'rgba(201,64,64,0.1)', color: t.tipo === 'Ingreso' ? 'var(--green-600)' : 'var(--red-500)' }}>
-                      {t.tipo === 'Ingreso' ? '↑' : '↓'} {t.tipo}
-                    </span>
-                  </td>
-                  <td style={tdStyle}>{fmtDate(t.fecha)}</td>
-                  <td style={{ padding: '13px 16px', fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 14, color: t.tipo === 'Ingreso' ? 'var(--green-600)' : 'var(--red-500)' }}>
-                    {t.tipo === 'Gasto' ? '-' : ''}{fmtMoney(t.monto)}
-                  </td>
+      <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.14 }}>
+        <div style={{ background: '#fff', border: '1px solid hsl(var(--border))', borderRadius: 16, overflow: 'hidden', boxShadow: 'var(--shadow-card)' }}>
+          {loading ? (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '56px 20px' }}><div style={{ width: 28, height: 28, border: '2px solid hsl(var(--border))', borderTopColor: 'hsl(var(--accent))', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /><style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style></div>
+          ) : filtradas.length === 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '56px 20px', gap: 10, color: 'hsl(var(--muted-fg))' }}>
+              <TrendingUp size={32} strokeWidth={1} /><span style={{ fontSize: 13 }}>Sin transacciones este mes</span>
+            </div>
+          ) : (
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid hsl(var(--muted))' }}>
+                  {['Descripción', 'Categoría', 'Tipo', 'Fecha', 'Monto'].map(h => (
+                    <th key={h} style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.7, textTransform: 'uppercase', color: 'hsl(var(--muted-fg))', textAlign: 'left', padding: '11px 18px', opacity: 0.7 }}>{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+              </thead>
+              <tbody>
+                {filtradas.map((t, i) => (
+                  <tr key={t.id}
+                    style={{ borderBottom: i < filtradas.length - 1 ? '1px solid hsl(var(--muted))' : 'none', transition: 'background 0.1s' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'hsl(var(--secondary))')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    <td style={{ padding: '13px 18px', fontSize: 13, fontWeight: 500, color: 'hsl(var(--foreground))' }}>{t.descripcion}</td>
+                    <td style={{ padding: '13px 18px' }}>
+                      {t.categoria
+                        ? <span style={{ display: 'inline-flex', padding: '2px 9px', borderRadius: 100, fontSize: 11, fontWeight: 500, background: 'hsl(var(--secondary))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--muted-fg))' }}>{t.categoria}</span>
+                        : <span style={{ color: 'hsl(var(--border))', fontSize: 13 }}>—</span>}
+                    </td>
+                    <td style={{ padding: '13px 18px' }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', borderRadius: 100, fontSize: 11, fontWeight: 500, background: t.tipo === 'Ingreso' ? 'rgba(40,130,90,0.08)' : 'rgba(180,42,42,0.08)', color: t.tipo === 'Ingreso' ? '#28825a' : '#b42a2a' }}>
+                        {t.tipo === 'Ingreso' ? <TrendingUp size={9} /> : <TrendingDown size={9} />} {t.tipo}
+                      </span>
+                    </td>
+                    <td style={{ padding: '13px 18px', fontSize: 13, color: 'hsl(var(--muted-fg))' }}>{fmtDate(t.fecha)}</td>
+                    <td style={{ padding: '13px 18px', fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 400, color: t.tipo === 'Ingreso' ? '#28825a' : '#b42a2a' }}>
+                      {t.tipo === 'Gasto' ? '-' : ''}{fmt(t.monto)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </motion.div>
     </div>
   )
 }
-
-function FormGroup({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div style={{ marginBottom: 18 }}>
-      <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: 'var(--brown-600)', marginBottom: 6 }}>{label}</label>
-      {children}
-    </div>
-  )
-}
-
-const pageTitle: React.CSSProperties = { fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 400, color: 'var(--brown-800)', margin: '0 0 4px', letterSpacing: -0.5 }
-const pageSub: React.CSSProperties = { margin: 0, fontSize: 13, color: 'var(--brown-400)' }
-const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid rgba(212,184,150,0.25)', borderRadius: 16, overflow: 'hidden' }
-const cardHeader: React.CSSProperties = { padding: '18px 24px', borderBottom: '1px solid var(--brown-50)', display: 'flex', alignItems: 'center' }
-const cardTitle: React.CSSProperties = { fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 500, color: 'var(--brown-800)' }
-const primaryBtnStyle: React.CSSProperties = { display: 'inline-flex', alignItems: 'center', gap: 6, background: 'var(--brown-800)', color: '#fff', border: 'none', borderRadius: 100, padding: '10px 20px', fontSize: 13, fontWeight: 500, cursor: 'pointer' }
-const inputStyle: React.CSSProperties = { padding: '10px 14px', border: '1px solid var(--brown-200)', borderRadius: 10, fontSize: 13, color: 'var(--brown-800)', background: '#fff', outline: 'none', boxSizing: 'border-box' }
-const thStyle: React.CSSProperties = { fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 0.5, color: 'var(--brown-300)', textAlign: 'left', padding: '12px 16px' }
-const tdStyle: React.CSSProperties = { padding: '13px 16px', fontSize: 13, color: 'var(--brown-600)' }
-const errorStyle: React.CSSProperties = { background: 'rgba(201,64,64,0.08)', border: '1px solid rgba(201,64,64,0.2)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: 'var(--red-500)', marginBottom: 18 }
-const loadingStyle: React.CSSProperties = { padding: '60px 20px', textAlign: 'center', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, color: 'var(--brown-300)' }
-const emptyStyle: React.CSSProperties = { padding: '60px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'var(--brown-300)', fontSize: 13 }
