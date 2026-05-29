@@ -18,9 +18,14 @@ export default function InventarioIndex() {
   const [saving, setSaving] = useState(false)
 
   const cargar = () => {
-    Promise.all([inventarioService.getAll(), inventarioService.getMovimientos()]).then(([pRes, mRes]) => {
-      setProductos(pRes.data); setMovimientos(mRes.data); setLoading(false)
-    })
+    setLoading(true)
+    Promise.all([
+      inventarioService.getAll(),
+      inventarioService.getMovimientos()
+    ])
+      .then(([pRes, mRes]) => { setProductos(pRes.data); setMovimientos(mRes.data) })
+      .catch(() => {})
+      .finally(() => setLoading(false))
   }
   useEffect(() => { cargar() }, [])
 
