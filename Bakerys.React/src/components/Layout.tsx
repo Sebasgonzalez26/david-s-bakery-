@@ -37,12 +37,21 @@ export default function Layout() {
       }}>
 
         {/* Logo */}
-        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0, marginRight: 6 }}>
-          <img
-            src="/logo.svg"
-            alt="Davi's Bakery"
-            style={{ height: 22, width: 'auto', display: 'block' }}
-          />
+        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', flexShrink: 0, marginRight: 6 }}>
+          <div style={{
+            width: 26, height: 26, borderRadius: 8,
+            background: 'hsl(var(--foreground))',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: 14, color: '#fff', fontWeight: 400 }}>D</span>
+          </div>
+          <span style={{
+            fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 600,
+            color: 'hsl(var(--foreground))', letterSpacing: '-0.2px',
+            whiteSpace: 'nowrap',
+          }}>
+            Davi's Bakery
+          </span>
         </NavLink>
 
         {/* Divider */}
