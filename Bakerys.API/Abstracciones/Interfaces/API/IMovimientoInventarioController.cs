@@ -5,6 +5,7 @@ namespace Abstracciones.Interfaces.API;
 
 public interface IMovimientoInventarioController
 {
+    Task<IActionResult> ObtenerTodos();
     Task<IActionResult> ObtenerPorProducto(int productoId);
     Task<IActionResult> Registrar(MovimientoInventarioRequest movimiento);
 }

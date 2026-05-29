@@ -13,6 +13,11 @@ namespace Flujo
             _movimientoDA = movimientoDA;
         }
 
+        public Task<IEnumerable<MovimientoInventarioResponse>> ObtenerTodos()
+        {
+            return _movimientoDA.ObtenerTodos();
+        }
+
         public Task<IEnumerable<MovimientoInventarioResponse>> ObtenerPorProducto(int productoId)
         {
             return _movimientoDA.ObtenerPorProducto(productoId);

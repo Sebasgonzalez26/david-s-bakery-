@@ -21,9 +21,10 @@ namespace Abstracciones.Modelos
 
     public class MovimientoInventarioResponse : MovimientoInventarioBase
     {
-        public int      Id         { get; set; }
-        public int      ProductoId { get; set; }
-        public DateTime Fecha      { get; set; }
-        public string?  Notas      { get; set; }
+        public int      Id             { get; set; }
+        public int      ProductoId     { get; set; }
+        public string   ProductoNombre { get; set; } = string.Empty;
+        public DateTime Fecha          { get; set; }
+        public string?  Notas          { get; set; }
     }
 }
