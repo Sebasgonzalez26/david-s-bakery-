@@ -60,17 +60,21 @@ export interface PagoRequest {
 export interface Producto {
   id: number
   nombre: string
+  categoria: string
   unidadMedida: string
   stockActual: number
   stockMinimo: number
+  precioUnitario: number
   activo: boolean
 }
 
 export interface ProductoRequest {
   nombre: string
+  categoria: string
   unidadMedida: string
   stockActual: number
   stockMinimo: number
+  precioUnitario: number
 }
 
 export interface MovimientoInventario {

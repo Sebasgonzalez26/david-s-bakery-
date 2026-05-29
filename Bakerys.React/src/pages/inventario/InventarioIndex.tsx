@@ -12,7 +12,7 @@ export default function InventarioIndex() {
   const [tab, setTab] = useState<'productos' | 'movimientos'>('productos')
   const [showProd, setShowProd] = useState(false)
   const [showMov, setShowMov] = useState(false)
-  const [prodForm, setProdForm] = useState({ nombre: '', unidadMedida: '', stockActual: '', stockMinimo: '' })
+  const [prodForm, setProdForm] = useState({ nombre: '', categoria: '', unidadMedida: '', stockActual: '', stockMinimo: '', precioUnitario: '' })
   const [movForm, setMovForm] = useState({ productoId: 0, tipoMovimiento: 'Entrada', cantidad: '', notas: '' })
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
@@ -26,9 +26,9 @@ export default function InventarioIndex() {
 
   const handleProd = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!prodForm.nombre || !prodForm.unidadMedida) { setError('Nombre y unidad requeridos.'); return }
+    if (!prodForm.nombre || !prodForm.categoria || !prodForm.unidadMedida || !prodForm.precioUnitario) { setError('Nombre, categoría, unidad y precio son requeridos.'); return }
     setSaving(true)
-    try { await inventarioService.create({ nombre: prodForm.nombre, unidadMedida: prodForm.unidadMedida, stockActual: Number(prodForm.stockActual), stockMinimo: Number(prodForm.stockMinimo) }); setProdForm({ nombre: '', unidadMedida: '', stockActual: '', stockMinimo: '' }); setShowProd(false); setError(''); cargar() }
+    try { await inventarioService.create({ nombre: prodForm.nombre, categoria: prodForm.categoria, unidadMedida: prodForm.unidadMedida, stockActual: Number(prodForm.stockActual), stockMinimo: Number(prodForm.stockMinimo), precioUnitario: Number(prodForm.precioUnitario) }); setProdForm({ nombre: '', categoria: '', unidadMedida: '', stockActual: '', stockMinimo: '', precioUnitario: '' }); setShowProd(false); setError(''); cargar() }
     catch { setError('Error al guardar.') } finally { setSaving(false) }
   }
 
@@ -65,8 +65,14 @@ export default function InventarioIndex() {
           <FormCard title="Nuevo Producto">
             <form onSubmit={handleProd} style={{ padding: '24px' }}>
               {error && <div style={errorAlertStyle}>{error}</div>}
-              <FormGroup label="Nombre *"><input style={inputStyle} value={prodForm.nombre} onChange={e => setProdForm({ ...prodForm, nombre: e.target.value })} /></FormGroup>
-              <FormGroup label="Unidad de Medida *"><input style={inputStyle} placeholder="kg, litros, unidades…" value={prodForm.unidadMedida} onChange={e => setProdForm({ ...prodForm, unidadMedida: e.target.value })} /></FormGroup>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                <FormGroup label="Nombre *"><input style={inputStyle} value={prodForm.nombre} onChange={e => setProdForm({ ...prodForm, nombre: e.target.value })} /></FormGroup>
+                <FormGroup label="Categoría *"><input style={inputStyle} placeholder="Harinas, Lácteos…" value={prodForm.categoria} onChange={e => setProdForm({ ...prodForm, categoria: e.target.value })} /></FormGroup>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                <FormGroup label="Unidad de Medida *"><input style={inputStyle} placeholder="kg, litros, unidades…" value={prodForm.unidadMedida} onChange={e => setProdForm({ ...prodForm, unidadMedida: e.target.value })} /></FormGroup>
+                <FormGroup label="Precio Unitario (₡) *"><input type="number" min="0.01" step="50" style={inputStyle} value={prodForm.precioUnitario} onChange={e => setProdForm({ ...prodForm, precioUnitario: e.target.value })} /></FormGroup>
+              </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                 <FormGroup label="Stock Actual"><input type="number" min="0" style={inputStyle} value={prodForm.stockActual} onChange={e => setProdForm({ ...prodForm, stockActual: e.target.value })} /></FormGroup>
                 <FormGroup label="Stock Mínimo"><input type="number" min="0" style={inputStyle} value={prodForm.stockMinimo} onChange={e => setProdForm({ ...prodForm, stockMinimo: e.target.value })} /></FormGroup>
@@ -124,7 +130,7 @@ export default function InventarioIndex() {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid hsl(var(--muted))' }}>
-                    {['Producto', 'Stock actual', 'Mínimo', 'Unidad', 'Estado'].map(h => (
+                    {['Producto', 'Categoría', 'Stock actual', 'Mínimo', 'Unidad', 'Precio', 'Estado'].map(h => (
                       <th key={h} style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.7, textTransform: 'uppercase', color: 'hsl(var(--muted-fg))', textAlign: 'left', padding: '11px 18px', opacity: 0.7 }}>{h}</th>
                     ))}
                   </tr>
@@ -140,6 +146,9 @@ export default function InventarioIndex() {
                       >
                         <td style={{ padding: '14px 18px', fontSize: 13, fontWeight: 500, color: 'hsl(var(--foreground))' }}>{p.nombre}</td>
                         <td style={{ padding: '14px 18px' }}>
+                          <span style={{ display: 'inline-flex', padding: '2px 9px', borderRadius: 100, fontSize: 11, fontWeight: 500, background: 'hsl(var(--secondary))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--muted-fg))' }}>{p.categoria}</span>
+                        </td>
+                        <td style={{ padding: '14px 18px' }}>
                           <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 400, color: bajo ? '#b42a2a' : 'hsl(var(--foreground))', lineHeight: 1, marginBottom: 4 }}>{p.stockActual}</div>
                           <div style={{ height: 3, width: 64, background: 'hsl(var(--muted))', borderRadius: 2, overflow: 'hidden' }}>
                             <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ delay: 0.3, duration: 0.5, ease: 'easeOut' }}
@@ -148,6 +157,7 @@ export default function InventarioIndex() {
                         </td>
                         <td style={{ padding: '14px 18px', fontSize: 13, color: 'hsl(var(--muted-fg))' }}>{p.stockMinimo}</td>
                         <td style={{ padding: '14px 18px', fontSize: 13, color: 'hsl(var(--muted-fg))' }}>{p.unidadMedida}</td>
+                        <td style={{ padding: '14px 18px', fontFamily: 'var(--font-display)', fontSize: 14, color: 'hsl(var(--foreground))' }}>{'₡' + p.precioUnitario.toLocaleString('es-CR')}</td>
                         <td style={{ padding: '14px 18px' }}>
                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 100, fontSize: 11, fontWeight: 500, background: bajo ? 'rgba(180,42,42,0.08)' : 'rgba(40,130,90,0.08)', border: `1px solid ${bajo ? 'rgba(180,42,42,0.18)' : 'rgba(40,130,90,0.18)'}`, color: bajo ? '#b42a2a' : '#28825a' }}>
                             {bajo ? <><ArrowDownToLine size={10} /> Stock bajo</> : <><ArrowUpFromLine size={10} /> OK</>}
