@@ -26,6 +26,11 @@ namespace Flujo
             return _pedidoDA.Agregar(pedido);
         }
 
+        public Task<int> Editar(int id, PedidoUpdateRequest pedido)
+        {
+            return _pedidoDA.Editar(id, pedido);
+        }
+
         public Task<int> AgregarDetalle(DetallePedidoRequest detalle)
         {
             return _pedidoDA.AgregarDetalle(detalle);

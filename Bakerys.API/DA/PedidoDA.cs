@@ -86,6 +86,21 @@ namespace DA
             return resultado;
         }
 
+        public async Task<int> Editar(int id, PedidoUpdateRequest pedido)
+        {
+            string query    = "sp_ActualizarPedido";
+            var    resultado = await _sqlconexion.ExecuteScalarAsync<int>(query, new
+            {
+                PedidoId     = id,
+                ClienteId    = pedido.ClienteId,
+                FechaEntrega = pedido.FechaEntrega,
+                MontoTotal   = pedido.MontoTotal,
+                Notas        = pedido.Notas,
+                EstadoNombre = pedido.Estado
+            }, commandType: System.Data.CommandType.StoredProcedure);
+            return resultado;
+        }
+
         public async Task<int> ActualizarEstado(int id, int estadoId)
         {
             string query = "sp_ActualizarEstadoPedido";

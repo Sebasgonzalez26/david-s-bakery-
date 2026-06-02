@@ -16,6 +16,15 @@ public class PedidoRequest : PedidoBase
     public DateTime FechaEntrega { get; set; }
 }
 
+public class PedidoUpdateRequest
+{
+    public int      ClienteId    { get; set; }
+    public DateTime FechaEntrega { get; set; }
+    public decimal  MontoTotal   { get; set; }
+    public string?  Notas        { get; set; }
+    public string?  Estado       { get; set; }
+}
+
 public class PedidoResponse : PedidoBase
 {
     public int      Id             { get; set; }
