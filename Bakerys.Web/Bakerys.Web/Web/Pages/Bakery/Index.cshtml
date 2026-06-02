@@ -1,0 +1,281 @@
+@page
+@model Web.Pages.Bakery.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["Page"]  = "Dashboard";
+    var cultura = new System.Globalization.CultureInfo("es-CR");
+    var hora = DateTime.Now.Hour;
+    var mesAnio = DateTime.Now.ToString("MMMM yyyy", cultura);
+    mesAnio = char.ToUpper(mesAnio[0]) + mesAnio.Substring(1);
+    var diaSemana = DateTime.Now.ToString("dddd", cultura);
+    diaSemana = char.ToUpper(diaSemana[0]) + diaSemana.Substring(1);
+}
+
+<!-- ── Hero editorial ──────────────────────────────────── -->
+<div class="db-hero">
+    <div class="db-hero-deco">DB</div>
+    <div class="db-hero-inner">
+        <div>
+            <div class="db-hero-tag">Panel Administrativo</div>
+            <h1 class="db-hero-title">
+                @(hora < 12 ? "Buenos días," : hora < 19 ? "Buenas tardes," : "Buenas noches,")<br>
+                Davi's Bakery.
+            </h1>
+            <div class="db-hero-meta">
+                <div class="db-hero-meta-item">
+                    <i class="bi bi-calendar3"></i>
+                    <strong>@diaSemana</strong>, @DateTime.Now.ToString("dd 'de' MMMM", cultura)
+                </div>
+                <div class="db-hero-meta-item">
+                    <i class="bi bi-box-seam"></i>
+                    <strong>@Model.PedidosActivos</strong> pedido(s) activo(s)
+                </div>
+                @if (Model.ProductosStockBajo > 0)
+                {
+                    <div class="db-hero-meta-item" style="color:rgba(255,180,120,.8);">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <strong style="color:rgba(255,200,140,.9);">@Model.ProductosStockBajo</strong> alerta(s) de stock
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="db-hero-stats">
+            @if (Model.Resumen != null)
+            {
+                <div class="db-hero-stat-block">
+                    <div class="db-hero-stat-label">Ingresos @DateTime.Now.ToString("MMM", cultura)</div>
+                    <div class="db-hero-stat-num">₡@Model.Resumen.TotalIngresos.ToString("N0")</div>
+                    <div class="db-hero-stat-sub">
+                        Balance ₡@Model.Resumen.BalanceNeto.ToString("N0")
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- ── KPIs editorial ─────────────────────────────────── -->
+<div class="db-kpi-grid">
+    <div class="db-kpi-card kpi-brown">
+        <div class="db-kpi-header">
+            <span class="db-kpi-label">Clientes</span>
+            <div class="db-kpi-icon"><i class="bi bi-people-fill"></i></div>
+        </div>
+        <div class="db-kpi-value">@Model.TotalClientes</div>
+        <div class="db-kpi-divider"></div>
+        <div class="db-kpi-sub">registrados en el sistema</div>
+    </div>
+
+    <div class="db-kpi-card kpi-gold">
+        <div class="db-kpi-header">
+            <span class="db-kpi-label">Pedidos activos</span>
+            <div class="db-kpi-icon"><i class="bi bi-box-seam-fill"></i></div>
+        </div>
+        <div class="db-kpi-value">@Model.PedidosActivos</div>
+        <div class="db-kpi-divider"></div>
+        <div class="db-kpi-sub">
+            @if (Model.PedidosPendientes > 0)
+            {
+                <span class="trend-down"><i class="bi bi-clock"></i> @Model.PedidosPendientes pendiente(s)</span>
+            }
+            else
+            {
+                <span class="trend-up"><i class="bi bi-check2"></i> al día</span>
+            }
+        </div>
+    </div>
+
+    <div class="db-kpi-card kpi-green">
+        <div class="db-kpi-header">
+            <span class="db-kpi-label">Gastos del mes</span>
+            <div class="db-kpi-icon"><i class="bi bi-receipt"></i></div>
+        </div>
+        <div class="db-kpi-value" style="font-size:36px; letter-spacing:-2px;">
+            @(Model.Resumen != null ? "₡" + Model.Resumen.TotalGastos.ToString("N0") : "—")
+        </div>
+        <div class="db-kpi-divider"></div>
+        <div class="db-kpi-sub">registrados este mes</div>
+    </div>
+
+    <div class="db-kpi-card kpi-red">
+        <div class="db-kpi-header">
+            <span class="db-kpi-label">Stock bajo</span>
+            <div class="db-kpi-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+        </div>
+        <div class="db-kpi-value">@Model.ProductosStockBajo</div>
+        <div class="db-kpi-divider"></div>
+        <div class="db-kpi-sub">
+            @if (Model.ProductosStockBajo == 0)
+            {
+                <span class="trend-up"><i class="bi bi-check2"></i> inventario en orden</span>
+            }
+            else
+            {
+                <span class="trend-down"><i class="bi bi-arrow-up-right"></i> requieren atención</span>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- ── Contenido principal ───────────────────────────── -->
+<div class="db-grid-6-4">
+
+    <!-- Pedidos recientes -->
+    <div>
+        <div class="db-section-label">
+            <span class="db-section-label-text">Pedidos recientes</span>
+        </div>
+        <div class="db-card">
+            <div class="db-card-header">
+                <h2 class="db-card-title"><i class="bi bi-clock-history"></i> Últimos pedidos</h2>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="db-chip">@Model.Pedidos.Count total</span>
+                    <a asp-page="/Pedidos/Index" class="db-btn db-btn-ghost db-btn-xs">
+                        Ver todos <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            @if (Model.Pedidos.Any())
+            {
+                <table class="db-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Entrega</th>
+                            <th>Estado</th>
+                            <th>Saldo</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.Pedidos.OrderByDescending(x => x.FechaCreacion).Take(7))
+                        {
+                            var badge = p.Estado switch {
+                                "Pendiente"  => "db-badge-amber",
+                                "En Proceso" => "db-badge-blue",
+                                "Listo"      => "db-badge-gold",
+                                "Entregado"  => "db-badge-green",
+                                "Cancelado"  => "db-badge-red",
+                                _            => "db-badge-brown"
+                            };
+                            <tr>
+                                <td>
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        <div class="db-avatar">@p.Cliente.Substring(0,1).ToUpper()</div>
+                                        <div>
+                                            <div style="font-weight:500; font-size:13px; color:var(--brown-800);">@p.Cliente</div>
+                                            <div style="font-size:11px; color:var(--brown-300);">@p.Telefono</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="font-size:13px; color:var(--brown-700);">@p.FechaEntrega.ToString("dd MMM yyyy")</span>
+                                </td>
+                                <td><span class="db-badge @badge">@p.Estado</span></td>
+                                <td>
+                                    <span style="font-size:13px; font-weight:500; color:@(p.SaldoPendiente > 0 ? "var(--red-500)" : "var(--green-600)");">
+                                        ₡@p.SaldoPendiente.ToString("N0")
+                                    </span>
+                                </td>
+                                <td style="font-weight:600; font-size:13px; font-family:var(--font-display); letter-spacing:-0.3px;">
+                                    ₡@p.MontoTotal.ToString("N0")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="db-empty">
+                    <i class="bi bi-box-seam"></i>
+                    <p>No hay pedidos registrados aún</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Panel lateral -->
+    <div>
+
+        <div class="db-section-label">
+            <span class="db-section-label-text">Accesos rápidos</span>
+        </div>
+
+        <div class="db-card" style="margin-bottom:16px;">
+            <div class="db-card-body">
+                <a asp-page="/Clientes/Agregar" class="db-quick-item">
+                    <div class="db-quick-icon"><i class="bi bi-person-plus"></i></div>
+                    <div>
+                        <span class="db-quick-title">Nuevo Cliente</span>
+                        <span class="db-quick-sub">Registrar cliente nuevo</span>
+                    </div>
+                    <i class="bi bi-chevron-right db-quick-arrow"></i>
+                </a>
+                <a asp-page="/Pedidos/Agregar" class="db-quick-item">
+                    <div class="db-quick-icon"><i class="bi bi-plus-circle"></i></div>
+                    <div>
+                        <span class="db-quick-title">Nuevo Pedido</span>
+                        <span class="db-quick-sub">Crear pedido para un cliente</span>
+                    </div>
+                    <i class="bi bi-chevron-right db-quick-arrow"></i>
+                </a>
+                <a asp-page="/Inventario/Index" class="db-quick-item">
+                    <div class="db-quick-icon"><i class="bi bi-archive"></i></div>
+                    <div>
+                        <span class="db-quick-title">Inventario</span>
+                        <span class="db-quick-sub">Gestionar productos y stock</span>
+                    </div>
+                    <i class="bi bi-chevron-right db-quick-arrow"></i>
+                </a>
+                <a asp-page="/Finanzas/Index" class="db-quick-item">
+                    <div class="db-quick-icon"><i class="bi bi-bar-chart-line"></i></div>
+                    <div>
+                        <span class="db-quick-title">Finanzas</span>
+                        <span class="db-quick-sub">Ingresos, gastos y balance</span>
+                    </div>
+                    <i class="bi bi-chevron-right db-quick-arrow"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="db-section-label">
+            <span class="db-section-label-text">Alertas de stock</span>
+        </div>
+
+        <div class="db-card">
+            <div class="db-card-body">
+                @if (Model.StockBajo.Any())
+                {
+                    @foreach (var prod in Model.StockBajo.Take(4))
+                    {
+                        var pct = prod.StockMinimo > 0
+                            ? (int)Math.Min(prod.StockActual / prod.StockMinimo * 100, 100) : 0;
+                        <div style="margin-bottom:20px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                                <span style="font-size:13px; font-weight:500; color:var(--brown-800);">@prod.Nombre</span>
+                                <span style="font-size:12px; font-weight:600; color:var(--red-500);">
+                                    @prod.StockActual/@prod.StockMinimo @prod.UnidadMedida
+                                </span>
+                            </div>
+                            <div class="db-stock-bar">
+                                <div class="db-stock-bar-fill low" style="width:@(pct)%"></div>
+                            </div>
+                        </div>
+                    }
+                    <a asp-page="/Inventario/Index" class="db-btn db-btn-outline db-btn-sm" style="width:100%; justify-content:center;">
+                        Ver inventario completo
+                    </a>
+                }
+                else
+                {
+                    <div class="db-alert db-alert-success" style="margin:0;">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Inventario en orden
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

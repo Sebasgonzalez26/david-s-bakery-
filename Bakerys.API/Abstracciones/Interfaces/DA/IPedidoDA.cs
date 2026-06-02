@@ -7,6 +7,7 @@ public interface IPedidoDA
     Task<PedidoResponse?> Obtener(int id);
     Task<IEnumerable<PedidoResponse>> Buscar(string? busqueda, int? estadoId, DateTime? fechaDesde, DateTime? fechaHasta);
     Task<int> Agregar(PedidoRequest pedido);
+    Task<int> Editar(int id, PedidoUpdateRequest pedido);
     Task<int> ActualizarEstado(int id, int estadoId);
     Task<int> Cancelar(int id, string? motivo);
 

@@ -4,6 +4,7 @@ namespace Abstracciones.Interfaces.Flujo;
 
 public interface IMovimientoInventarioFlujo
 {
+    Task<IEnumerable<MovimientoInventarioResponse>> ObtenerTodos();
     Task<IEnumerable<MovimientoInventarioResponse>> ObtenerPorProducto(int productoId);
     Task<int>                                       Registrar(MovimientoInventarioRequest movimiento);
 }

@@ -54,9 +54,14 @@ namespace API.Controllers
         }
 
         [HttpGet("resumen")]
-        public async Task<IActionResult> ObtenerResumen(DateTime? fechaDesde, DateTime? fechaHasta)
+        public async Task<IActionResult> ObtenerResumen(int? mes, int? anio)
         {
-            var resultado = await _transaccionFlujo.ObtenerResumen(fechaDesde, fechaHasta);
+            var now    = DateTime.Now;
+            int m      = mes  ?? now.Month;
+            int a      = anio ?? now.Year;
+            var desde  = new DateTime(a, m, 1);
+            var hasta  = desde.AddMonths(1).AddDays(-1);
+            var resultado = await _transaccionFlujo.ObtenerResumen(desde, hasta);
             return Ok(resultado);
         }
     }

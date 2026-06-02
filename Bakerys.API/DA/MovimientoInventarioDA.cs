@@ -16,6 +16,14 @@ namespace DA
             _sqlconexion       = (SqlConnection)_repositorioDapper.ObtenerRepositorio();
         }
 
+        public async Task<IEnumerable<MovimientoInventarioResponse>> ObtenerTodos()
+        {
+            string query    = "sp_ObtenerMovimientos";
+            var    resultado = await _sqlconexion.QueryAsync<MovimientoInventarioResponse>(query,
+                commandType: System.Data.CommandType.StoredProcedure);
+            return resultado;
+        }
+
         public async Task<IEnumerable<MovimientoInventarioResponse>> ObtenerPorProducto(int productoId)
         {
             string query    = "sp_ObtenerMovimientosPorProducto";

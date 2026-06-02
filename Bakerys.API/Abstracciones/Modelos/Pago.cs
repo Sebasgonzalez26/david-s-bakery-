@@ -18,7 +18,10 @@ public class PagoRequest : PagoBase
 
 public class PagoResponse : PagoBase
 {
-    public int      Id        { get; set; }
-    public int      PedidoId  { get; set; }
-    public DateTime FechaPago { get; set; }
+    public int      Id             { get; set; }
+    public int      PedidoId       { get; set; }
+    public string   ClienteNombre  { get; set; } = string.Empty;
+    public string   MetodoPago     { get; set; } = string.Empty;
+    public DateTime Fecha          { get; set; }
+    public DateTime FechaPago      { get; set; }
 }

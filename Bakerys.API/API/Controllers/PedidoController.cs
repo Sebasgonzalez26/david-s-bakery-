@@ -46,6 +46,13 @@ namespace API.Controllers
             return CreatedAtAction(nameof(Obtener), new { id = resultado }, resultado);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Editar(int id, PedidoUpdateRequest pedido)
+        {
+            var resultado = await _pedidoFlujo.Editar(id, pedido);
+            return Ok(resultado);
+        }
+
         [HttpPut("{id}/estado")]
         public async Task<IActionResult> ActualizarEstado(int id, int estadoId)
         {

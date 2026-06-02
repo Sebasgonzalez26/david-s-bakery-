@@ -18,6 +18,13 @@ namespace API.Controllers
             _logger          = logger;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ObtenerTodos()
+        {
+            var resultado = await _movimientoFlujo.ObtenerTodos();
+            return Ok(resultado);
+        }
+
         [HttpGet("producto/{productoId}")]
         public async Task<IActionResult> ObtenerPorProducto(int productoId)
         {

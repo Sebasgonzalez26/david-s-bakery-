@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — Davi's Bakery</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="db-body">
+
+    <header class="db-navbar">
+        <div class="db-navbar-inner">
+            <a class="db-navbar-brand" asp-page="/Bakery/Index">
+                <div class="db-brand-dot"></div>
+                <span class="db-brand-name">Davi's Bakery</span>
+            </a>
+
+            <nav class="db-nav">
+                <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Dashboard"  ? "active" : "")" asp-page="/Bakery/Index">Dashboard</a>
+                <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Clientes"   ? "active" : "")" asp-page="/Clientes/Index">Clientes</a>
+                <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Pedidos"    ? "active" : "")" asp-page="/Pedidos/Index">Pedidos</a>
+                <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Pagos"      ? "active" : "")" asp-page="/Pagos/Index">Pagos</a>
+                <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Inventario" ? "active" : "")" asp-page="/Inventario/Index">Inventario</a>
+                <a class="db-nav-link @(ViewData["Page"]?.ToString() == "Finanzas"   ? "active" : "")" asp-page="/Finanzas/Index">Finanzas</a>
+            </nav>
+
+            <div class="db-navbar-right">
+                <span class="db-topbar-date">
+                    @DateTime.Now.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("es-CR"))
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="db-content">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

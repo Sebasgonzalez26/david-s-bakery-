@@ -9,6 +9,7 @@ namespace Abstracciones.Interfaces.Flujo
 {
     public interface IPagoFlujo
     {
+        Task<IEnumerable<PagoResponse>> ObtenerTodos();
         Task<IEnumerable<PagoResponse>> ObtenerPorPedido(int pedidoId);
         Task<decimal> ObtenerSaldoPendiente(int pedidoId);
         Task<int> Agregar(PagoRequest pago);
