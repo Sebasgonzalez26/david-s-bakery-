@@ -44,7 +44,7 @@ export interface Pago {
   pedidoId: number
   clienteNombre: string
   monto: number
-  metodoPago: string
+  metodoPago: string  // alias de TipoPago del backend
   fecha: string
   notas?: string
 }
@@ -52,7 +52,7 @@ export interface Pago {
 export interface PagoRequest {
   pedidoId: number
   monto: number
-  metodoPago: string
+  tipoPago: string
   notas?: string
 }
 

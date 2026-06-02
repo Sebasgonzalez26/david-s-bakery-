@@ -14,7 +14,7 @@ export default function PagosIndex() {
   const [pedidos, setPedidos] = useState<Pedido[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({ pedidoId: 0, monto: '', metodoPago: 'Efectivo', notas: '' })
+  const [form, setForm] = useState({ pedidoId: 0, monto: '', tipoPago: 'Efectivo', notas: '' })
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
 
@@ -35,8 +35,8 @@ export default function PagosIndex() {
     if (!form.pedidoId || !form.monto) { setError('Seleccione pedido e ingrese monto.'); return }
     setSaving(true)
     try {
-      await pagoService.create({ pedidoId: form.pedidoId, monto: Number(form.monto), metodoPago: form.metodoPago, notas: form.notas })
-      setShowForm(false); setForm({ pedidoId: 0, monto: '', metodoPago: 'Efectivo', notas: '' }); setError('')
+      await pagoService.create({ pedidoId: form.pedidoId, monto: Number(form.monto), tipoPago: form.tipoPago, notas: form.notas })
+      setShowForm(false); setForm({ pedidoId: 0, monto: '', tipoPago: 'Efectivo', notas: '' }); setError('')
       cargar()
     } catch { setError('Error al registrar el pago.') }
     finally { setSaving(false) }
@@ -73,7 +73,7 @@ export default function PagosIndex() {
                   <input type="number" min="0" step="100" style={inputStyle} value={form.monto} onChange={e => setForm({ ...form, monto: e.target.value })} />
                 </FormGroup>
                 <FormGroup label="Método">
-                  <select style={inputStyle} value={form.metodoPago} onChange={e => setForm({ ...form, metodoPago: e.target.value })}>
+                  <select style={inputStyle} value={form.tipoPago} onChange={e => setForm({ ...form, tipoPago: e.target.value })}>
                     {['Efectivo','SINPE','Transferencia','Tarjeta'].map(m => <option key={m}>{m}</option>)}
                   </select>
                 </FormGroup>
