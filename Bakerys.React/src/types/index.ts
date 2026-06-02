@@ -22,7 +22,7 @@ export interface Pedido {
   clienteId: number
   cliente: string
   telefono: string
-  descripcion: string
+  notas?: string
   montoTotal: number
   saldoPendiente: number
   fechaEntrega: string
@@ -32,7 +32,7 @@ export interface Pedido {
 
 export interface PedidoRequest {
   clienteId: number
-  descripcion: string
+  notas?: string
   montoTotal: number
   fechaEntrega: string
   estado?: string

@@ -113,7 +113,7 @@ export default function PedidosIndex() {
                         </div>
                       </td>
                       <td style={{ padding: '13px 18px', fontSize: 13, color: 'hsl(var(--muted-fg))', maxWidth: 160 }}>
-                        <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 150 }}>{p.descripcion}</div>
+                        <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 150 }}>{p.notas || '—'}</div>
                       </td>
                       <td style={{ padding: '13px 18px', fontSize: 13, color: 'hsl(var(--muted-fg))' }}>{fmtDate(p.fechaEntrega)}</td>
                       <td style={{ padding: '13px 18px' }}>

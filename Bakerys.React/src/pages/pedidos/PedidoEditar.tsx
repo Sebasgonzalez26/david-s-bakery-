@@ -10,7 +10,7 @@ export default function PedidoEditar() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [clientes, setClientes] = useState<Cliente[]>([])
-  const [form, setForm] = useState({ clienteId: 0, descripcion: '', montoTotal: '', fechaEntrega: '', estado: 'Pendiente' })
+  const [form, setForm] = useState({ clienteId: 0, notas: '', montoTotal: '', fechaEntrega: '', estado: 'Pendiente' })
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -19,7 +19,7 @@ export default function PedidoEditar() {
     if (!id) return
     Promise.all([pedidoService.getById(Number(id)), clienteService.getAll()]).then(([pRes, cRes]) => {
       const p = pRes.data
-      setForm({ clienteId: p.clienteId, descripcion: p.descripcion, montoTotal: String(p.montoTotal), fechaEntrega: p.fechaEntrega.split('T')[0], estado: p.estado })
+      setForm({ clienteId: p.clienteId, notas: p.notas ?? '', montoTotal: String(p.montoTotal), fechaEntrega: p.fechaEntrega.split('T')[0], estado: p.estado })
       setClientes(cRes.data.filter(c => c.activo))
       setLoading(false)
     })
@@ -27,10 +27,10 @@ export default function PedidoEditar() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.clienteId || !form.descripcion || !form.montoTotal || !form.fechaEntrega) { setError('Complete todos los campos requeridos.'); return }
+    if (!form.clienteId || !form.montoTotal || !form.fechaEntrega) { setError('Complete todos los campos requeridos.'); return }
     setSaving(true)
     try {
-      await pedidoService.update(Number(id), { clienteId: form.clienteId, descripcion: form.descripcion, montoTotal: Number(form.montoTotal), fechaEntrega: form.fechaEntrega, estado: form.estado })
+      await pedidoService.update(Number(id), { clienteId: form.clienteId, notas: form.notas, montoTotal: Number(form.montoTotal), fechaEntrega: form.fechaEntrega, estado: form.estado })
       navigate('/pedidos')
     } catch { setError('Error al guardar.'); setSaving(false) }
   }
@@ -50,8 +50,8 @@ export default function PedidoEditar() {
                 {clientes.map(c => <option key={c.id} value={c.id}>{c.nombre} — {c.telefono}</option>)}
               </select>
             </FormGroup>
-            <FormGroup label="Descripción *">
-              <textarea style={{ ...inputStyle, resize: 'vertical', minHeight: 80 }} value={form.descripcion} onChange={e => setForm({ ...form, descripcion: e.target.value })} />
+            <FormGroup label="Notas">
+              <textarea style={{ ...inputStyle, resize: 'vertical', minHeight: 80 }} value={form.notas} onChange={e => setForm({ ...form, notas: e.target.value })} />
             </FormGroup>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               <FormGroup label="Monto Total (₡) *">

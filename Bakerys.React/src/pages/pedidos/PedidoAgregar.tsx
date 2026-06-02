@@ -9,7 +9,7 @@ import type { Cliente } from '../../types'
 export default function PedidoAgregar() {
   const navigate = useNavigate()
   const [clientes, setClientes] = useState<Cliente[]>([])
-  const [form, setForm] = useState({ clienteId: 0, descripcion: '', montoTotal: '', fechaEntrega: '', estado: 'Pendiente' })
+  const [form, setForm] = useState({ clienteId: 0, notas: '', montoTotal: '', fechaEntrega: '', estado: 'Pendiente' })
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
 
@@ -17,10 +17,10 @@ export default function PedidoAgregar() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.clienteId || !form.descripcion || !form.montoTotal || !form.fechaEntrega) { setError('Complete todos los campos requeridos.'); return }
+    if (!form.clienteId || !form.notas || !form.montoTotal || !form.fechaEntrega) { setError('Complete todos los campos requeridos.'); return }
     setSaving(true)
     try {
-      await pedidoService.create({ clienteId: form.clienteId, descripcion: form.descripcion, montoTotal: Number(form.montoTotal), fechaEntrega: form.fechaEntrega, estado: form.estado })
+      await pedidoService.create({ clienteId: form.clienteId, notas: form.notas, montoTotal: Number(form.montoTotal), fechaEntrega: form.fechaEntrega, estado: form.estado })
       navigate('/pedidos')
     } catch { setError('Error al guardar.'); setSaving(false) }
   }
@@ -39,7 +39,7 @@ export default function PedidoAgregar() {
               </select>
             </FormGroup>
             <FormGroup label="Descripción *">
-              <textarea style={{ ...inputStyle, resize: 'vertical', minHeight: 80 }} value={form.descripcion} onChange={e => setForm({ ...form, descripcion: e.target.value })} />
+              <textarea style={{ ...inputStyle, resize: 'vertical', minHeight: 80 }} value={form.notas} onChange={e => setForm({ ...form, notas: e.target.value })} />
             </FormGroup>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               <FormGroup label="Monto Total (₡) *">
