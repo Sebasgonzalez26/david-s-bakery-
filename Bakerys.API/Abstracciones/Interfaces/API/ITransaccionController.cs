@@ -10,5 +10,5 @@ public interface ITransaccionController
     Task<IActionResult> Registrar(TransaccionRequest transaccion);
     Task<IActionResult> Editar(int id, TransaccionRequest transaccion);
     Task<IActionResult> Eliminar(int id);
-    Task<IActionResult> ObtenerResumen(DateTime? fechaDesde, DateTime? fechaHasta);
+    Task<IActionResult> ObtenerResumen(int? mes, int? anio);
 }
