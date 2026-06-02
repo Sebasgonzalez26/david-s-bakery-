@@ -26,7 +26,7 @@ export default function FinanzasIndex() {
     finanzasService.getResumen(mes, anio)
       .then(r => setResumen(r.data))
       .catch(() => {})
-    finanzasService.getAll()
+    finanzasService.getAll(mes, anio)
       .then(r => setTransacciones(r.data))
       .catch(() => {})
       .finally(() => setLoading(false))
@@ -41,8 +41,7 @@ export default function FinanzasIndex() {
     catch { setError('Error al guardar.') } finally { setSaving(false) }
   }
 
-  const filtradas = transacciones
-    .filter(t => { const d = new Date(t.fecha); return d.getMonth() + 1 === mes && d.getFullYear() === anio })
+  const filtradas = [...transacciones]
     .sort((a,b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
 
   return (
