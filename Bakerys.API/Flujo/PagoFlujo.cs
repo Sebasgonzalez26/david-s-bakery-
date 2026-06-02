@@ -18,6 +18,11 @@ namespace Flujo
             return _pagoDA.Agregar(pago);
         }
 
+        public Task<IEnumerable<PagoResponse>> ObtenerTodos()
+        {
+            return _pagoDA.ObtenerTodos();
+        }
+
         public Task<IEnumerable<PagoResponse>> ObtenerPorPedido(int pedidoId)
         {
             return _pagoDA.ObtenerPorPedido(pedidoId);

@@ -30,6 +30,14 @@ namespace DA
             return resultado;
         }
 
+        public async Task<IEnumerable<PagoResponse>> ObtenerTodos()
+        {
+            string query    = "sp_ObtenerPagos";
+            var    resultado = await _sqlconexion.QueryAsync<PagoResponse>(query,
+                commandType: System.Data.CommandType.StoredProcedure);
+            return resultado;
+        }
+
         public async Task<IEnumerable<PagoResponse>> ObtenerPorPedido(int pedidoId)
         {
             string query = "sp_ObtenerPagosPorPedido";

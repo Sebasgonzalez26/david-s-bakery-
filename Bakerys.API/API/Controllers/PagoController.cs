@@ -18,6 +18,13 @@ namespace API.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ObtenerTodos()
+        {
+            var resultado = await _pagoFlujo.ObtenerTodos();
+            return Ok(resultado);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Agregar(PagoRequest pago)
         {
