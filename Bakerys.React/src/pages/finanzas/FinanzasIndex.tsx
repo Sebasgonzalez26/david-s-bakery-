@@ -23,9 +23,13 @@ export default function FinanzasIndex() {
 
   const cargar = () => {
     setLoading(true)
-    Promise.all([finanzasService.getResumen(mes, anio), finanzasService.getAll()])
-      .then(([rRes, tRes]) => { setResumen(rRes.data); setTransacciones(tRes.data); setLoading(false) })
-      .catch(() => setLoading(false))
+    finanzasService.getResumen(mes, anio)
+      .then(r => setResumen(r.data))
+      .catch(() => {})
+    finanzasService.getAll()
+      .then(r => setTransacciones(r.data))
+      .catch(() => {})
+      .finally(() => setLoading(false))
   }
   useEffect(() => { cargar() }, [mes, anio])
 

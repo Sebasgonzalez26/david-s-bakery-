@@ -99,8 +99,8 @@ export interface ResumenFinanciero {
   totalIngresos: number
   totalGastos: number
   balanceNeto: number
-  mes: number
-  anio: number
+  fechaDesde: string
+  fechaHasta: string
 }
 
 export interface Transaccion {
