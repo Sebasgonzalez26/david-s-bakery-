@@ -19,11 +19,14 @@ export default function PagosIndex() {
   const [saving, setSaving] = useState(false)
 
   const cargar = () => {
-    Promise.all([pagoService.getAll(), pedidoService.getAll()]).then(([pRes, oRes]) => {
-      setPagos(pRes.data)
-      setPedidos(oRes.data.filter(p => p.estado !== 'Cancelado' && p.saldoPendiente > 0))
-      setLoading(false)
-    })
+    setLoading(true)
+    pagoService.getAll()
+      .then(pRes => setPagos(pRes.data))
+      .catch(() => setPagos([]))
+    pedidoService.getAll()
+      .then(oRes => setPedidos(oRes.data.filter(p => p.estado !== 'Cancelado' && p.saldoPendiente > 0)))
+      .catch(() => {})
+      .finally(() => setLoading(false))
   }
   useEffect(() => { cargar() }, [])
 
