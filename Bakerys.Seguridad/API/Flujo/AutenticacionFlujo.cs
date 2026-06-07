@@ -26,7 +26,7 @@ namespace Flujo
 
             var usuario = await _usuarioDA.ObtenerUsuario(new UsuarioBase
             {
-                NombreUsuario     = string.Empty,
+                NombreUsuario     = null!,
                 CorreoElectronico = login.CorreoElectronico,
                 PasswordHash      = login.PasswordHash
             });
