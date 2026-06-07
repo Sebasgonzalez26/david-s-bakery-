@@ -20,10 +20,17 @@ namespace Controllers
 
         [AllowAnonymous]
         [HttpPost("registrar")]
-        public async Task<IActionResult> Registrar([FromBody] UsuarioBase usuario)
+        public async Task<IActionResult> Registrar([FromBody] RegistroRequest registro)
         {
-            var id = await _usuarioFlujo.CrearUsuario(usuario);
-            return Ok(new { id, mensaje = "Usuario registrado correctamente." });
+            try
+            {
+                var id = await _usuarioFlujo.CrearUsuario(registro);
+                return Ok(new { id, mensaje = "Usuario registrado correctamente." });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized(new { mensaje = "Código de registro inválido." });
+            }
         }
     }
 }

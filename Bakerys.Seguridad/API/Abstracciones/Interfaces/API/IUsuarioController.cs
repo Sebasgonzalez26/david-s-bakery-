@@ -5,6 +5,6 @@ namespace Abstracciones.Interfaces.API
 {
     public interface IUsuarioController
     {
-        Task<IActionResult> Registrar(UsuarioBase usuario);
+        Task<IActionResult> Registrar(RegistroRequest registro);
     }
 }
