@@ -3,22 +3,32 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { authService } from '../../services/authService'
 
+async function sha256(text: string): Promise<string> {
+  const buf    = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('')
+}
+
 export default function Login() {
   const navigate = useNavigate()
-  const [form, setForm]   = useState({ nombreUsuario: '', correoElectronico: '', passwordHash: '' })
+  const [form, setForm]   = useState({ nombreUsuario: '', correoElectronico: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.nombreUsuario || !form.correoElectronico || !form.passwordHash) {
+    if (!form.nombreUsuario || !form.correoElectronico || !form.password) {
       setError('Todos los campos son requeridos.')
       return
     }
     setLoading(true)
     setError('')
     try {
-      const res = await authService.login(form)
+      const hash = await sha256(form.password)
+      const res  = await authService.login({
+        nombreUsuario:     form.nombreUsuario,
+        correoElectronico: form.correoElectronico,
+        passwordHash:      hash,
+      })
       if (!res.data.validacionExitosa) {
         setError('Credenciales inválidas.')
         return
@@ -144,8 +154,8 @@ export default function Login() {
                   background: 'hsl(var(--secondary))',
                   outline: 'none',
                 }}
-                value={form.passwordHash}
-                onChange={e => setForm({ ...form, passwordHash: e.target.value })}
+                value={form.password}
+                onChange={e => setForm({ ...form, password: e.target.value })}
               />
             </div>
 
