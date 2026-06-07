@@ -96,14 +96,14 @@ export default function Registro() {
           style={{ display: 'flex', alignItems: 'center', gap: 10, position: 'relative' }}
         >
           <div style={{
-            width: 38, height: 38, borderRadius: 11,
+            width: 54, height: 54, borderRadius: 15,
             background: 'rgba(255,255,255,0.08)',
-            border: '1px solid rgba(255,255,255,0.12)',
+            border: '1px solid rgba(255,255,255,0.14)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            <span style={{ fontFamily: 'var(--font-display)', fontSize: 19, color: '#fff' }}>D</span>
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: 28, color: '#fff' }}>D</span>
           </div>
-          <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, fontWeight: 500, letterSpacing: 0.4 }}>
+          <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 16, fontWeight: 500, letterSpacing: 0.4 }}>
             Davi's Bakery
           </span>
         </motion.div>
@@ -126,7 +126,7 @@ export default function Registro() {
                   fontSize: 58,
                   fontWeight: 800,
                   letterSpacing: -2.5,
-                  color: char === '.' ? '#10b981' : '#ffffff',
+                  color: char === '.' ? 'rgba(255,255,255,0.35)' : '#ffffff',
                   whiteSpace: 'pre',
                 }}
               >
