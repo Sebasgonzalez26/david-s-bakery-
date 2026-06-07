@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import ClientesIndex from './pages/clientes/ClientesIndex'
@@ -10,12 +10,24 @@ import PedidoEditar from './pages/pedidos/PedidoEditar'
 import PagosIndex from './pages/pagos/PagosIndex'
 import InventarioIndex from './pages/inventario/InventarioIndex'
 import FinanzasIndex from './pages/finanzas/FinanzasIndex'
+import Login from './pages/auth/Login'
+import { authService } from './services/authService'
+
+function RutaProtegida({ children }: { children: React.ReactNode }) {
+  return authService.estaAutenticado() ? <>{children}</> : <Navigate to="/login" replace />
+}
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/" element={
+          <RutaProtegida>
+            <Layout />
+          </RutaProtegida>
+        }>
           <Route index element={<Dashboard />} />
 
           <Route path="clientes" element={<ClientesIndex />} />
