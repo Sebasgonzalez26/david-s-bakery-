@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const authApi = axios.create({
-  baseURL: 'https://localhost:7021/api',
+  baseURL: 'https://localhost:7092/api',
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -9,6 +9,7 @@ export interface LoginRequest {
   correoElectronico: string
   passwordHash:      string
 }
+
 
 export interface RegistroRequest {
   nombreUsuario:     string

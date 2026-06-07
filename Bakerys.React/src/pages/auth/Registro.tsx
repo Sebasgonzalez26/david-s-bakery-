@@ -8,6 +8,8 @@ async function sha256(text: string): Promise<string> {
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
+const headlineText = 'Join the team.'
+
 export default function Registro() {
   const navigate = useNavigate()
   const [form, setForm] = useState({
@@ -37,95 +39,298 @@ export default function Registro() {
         codigoRegistro:    form.codigoRegistro,
       })
       setExito(true)
-      setTimeout(() => navigate('/login'), 2000)
+      setTimeout(() => navigate('/login'), 2200)
     } catch (err: any) {
       const msg = err?.response?.data?.mensaje
-      setError(msg ?? 'Error al registrar. Verificá el código de acceso.')
+      setError(msg ?? 'Código de acceso inválido o correo ya registrado.')
     } finally {
       setLoading(false)
     }
   }
 
-  const inputStyle: React.CSSProperties = {
-    width: '100%', boxSizing: 'border-box',
-    padding: '10px 14px',
-    border: '1px solid hsl(var(--border))',
-    borderRadius: 10, fontSize: 13,
-    color: 'hsl(var(--foreground))',
-    background: 'hsl(var(--secondary))',
-    outline: 'none',
-  }
+  const fields = [
+    { label: 'Nombre de usuario',  key: 'nombreUsuario',     type: 'text',     placeholder: 'ej: panadero99',        auto: 'username' },
+    { label: 'Correo electrónico', key: 'correoElectronico', type: 'email',    placeholder: 'tu@correo.com',          auto: 'email' },
+    { label: 'Contraseña',          key: 'password',          type: 'password', placeholder: '••••••••',               auto: 'new-password' },
+    { label: 'Código de acceso',    key: 'codigoRegistro',    type: 'password', placeholder: 'Código del administrador', auto: 'off' },
+  ] as const
 
   return (
-    <div style={{
-      minHeight: '100vh', background: 'hsl(var(--background))',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24,
-    }}>
-      <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
-        style={{ width: '100%', maxWidth: 420 }}>
+    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'var(--font-sans)' }}>
 
-        {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ width: 48, height: 48, borderRadius: 14, background: 'hsl(var(--foreground))', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-            <span style={{ fontFamily: 'var(--font-display)', fontSize: 24, color: '#fff', fontWeight: 400 }}>D</span>
-          </div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 400, color: 'hsl(var(--foreground))', letterSpacing: -0.5, marginBottom: 4 }}>
-            Crear cuenta
-          </h1>
-          <p style={{ fontSize: 13, color: 'hsl(var(--muted-fg))' }}>Necesitás un código de acceso para registrarte</p>
+      {/* ── Left panel ─────────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, x: -48 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          flex: 1,
+          background: 'linear-gradient(145deg, #0a0a0f 0%, #13131f 45%, #0d1f2e 100%)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: '44px 52px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Ambient glows */}
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+          <div style={{
+            position: 'absolute', width: 480, height: 480, borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(16,185,129,0.13) 0%, transparent 65%)',
+            top: -120, right: -100,
+          }} />
+          <div style={{
+            position: 'absolute', width: 340, height: 340, borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 65%)',
+            bottom: 80, left: -60,
+          }} />
         </div>
 
-        <div style={{ background: '#fff', border: '1px solid hsl(var(--border))', borderRadius: 20, padding: 32, boxShadow: 'var(--shadow-md)' }}>
-          {exito ? (
-            <div style={{ textAlign: 'center', padding: '20px 0' }}>
-              <div style={{ fontSize: 32, marginBottom: 12 }}>✅</div>
-              <p style={{ fontSize: 14, color: '#28825a', fontWeight: 500 }}>Cuenta creada correctamente</p>
-              <p style={{ fontSize: 12, color: 'hsl(var(--muted-fg))' }}>Redirigiendo al login…</p>
-            </div>
-          ) : (
+        {/* Top logo */}
+        <motion.div
+          initial={{ opacity: 0, y: -16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.5 }}
+          style={{ display: 'flex', alignItems: 'center', gap: 10, position: 'relative' }}
+        >
+          <div style={{
+            width: 38, height: 38, borderRadius: 11,
+            background: 'rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: 19, color: '#fff' }}>D</span>
+          </div>
+          <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, fontWeight: 500, letterSpacing: 0.4 }}>
+            Davi's Bakery
+          </span>
+        </motion.div>
+
+        {/* Animated headline */}
+        <div style={{ position: 'relative' }}>
+          <div style={{ marginBottom: 22, lineHeight: 1 }}>
+            {headlineText.split('').map((char, i) => (
+              <motion.span
+                key={i}
+                initial={{ y: 72, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{
+                  delay: 0.45 + i * 0.028,
+                  duration: 0.55,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                style={{
+                  display: 'inline-block',
+                  fontSize: 58,
+                  fontWeight: 800,
+                  letterSpacing: -2.5,
+                  color: char === '.' ? '#10b981' : '#ffffff',
+                  whiteSpace: 'pre',
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.35, duration: 0.55 }}
+            style={{
+              color: 'rgba(255,255,255,0.38)',
+              fontSize: 15,
+              lineHeight: 1.75,
+              maxWidth: 300,
+            }}
+          >
+            Necesitás un código de acceso proporcionado por el administrador para registrarte.
+          </motion.p>
+        </div>
+
+        {/* Developer credit */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.7, duration: 0.6 }}
+          style={{
+            fontSize: 11.5,
+            color: 'rgba(255,255,255,0.18)',
+            letterSpacing: 0.4,
+            position: 'relative',
+          }}
+        >
+          Desarrollado por{' '}
+          <span style={{ color: 'rgba(255,255,255,0.38)', fontWeight: 600 }}>
+            Sebastián González Rojas
+          </span>
+        </motion.p>
+      </motion.div>
+
+      {/* ── Right panel — form ──────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, x: 48 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          width: 480,
+          background: '#f9f9fb',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '48px 52px',
+          position: 'relative',
+        }}
+      >
+        {exito ? (
+          /* Success state */
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            style={{ textAlign: 'center' }}
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.1, type: 'spring', stiffness: 220, damping: 14 }}
+              style={{
+                width: 72, height: 72, borderRadius: '50%',
+                background: 'linear-gradient(135deg, #d1fae5, #a7f3d0)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 24px',
+                fontSize: 32,
+              }}
+            >
+              ✓
+            </motion.div>
+            <h2 style={{ fontSize: 22, fontWeight: 700, color: '#0a0a0f', marginBottom: 8 }}>
+              ¡Cuenta creada!
+            </h2>
+            <p style={{ fontSize: 14, color: '#9ca3af' }}>Redirigiendo al inicio de sesión…</p>
+          </motion.div>
+        ) : (
+          <>
+            {/* Form header */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.5 }}
+              style={{ marginBottom: 32 }}
+            >
+              <h2 style={{
+                fontSize: 26, fontWeight: 750, color: '#0a0a0f',
+                letterSpacing: -0.8, marginBottom: 6,
+              }}>
+                Crear cuenta
+              </h2>
+              <p style={{ fontSize: 13.5, color: '#9ca3af' }}>
+                Completá el formulario para acceder al sistema
+              </p>
+            </motion.div>
+
             <form onSubmit={handleSubmit}>
               {error && (
-                <div style={{ background: 'rgba(180,42,42,0.06)', border: '1px solid rgba(180,42,42,0.2)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#b42a2a', marginBottom: 20 }}>
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  style={{
+                    background: '#fef2f2', border: '1px solid #fecaca',
+                    borderRadius: 12, padding: '11px 16px',
+                    fontSize: 13, color: '#dc2626', marginBottom: 22,
+                  }}
+                >
                   {error}
-                </div>
+                </motion.div>
               )}
 
-              {[
-                { label: 'Nombre de usuario', key: 'nombreUsuario',     type: 'text',     placeholder: '' },
-                { label: 'Correo electrónico', key: 'correoElectronico', type: 'email',    placeholder: '' },
-                { label: 'Contraseña',          key: 'password',         type: 'password', placeholder: '' },
-                { label: 'Código de acceso',    key: 'codigoRegistro',   type: 'password', placeholder: 'Código provisto por el administrador' },
-              ].map(f => (
-                <div key={f.key} style={{ marginBottom: 16 }}>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: 'hsl(var(--foreground))', marginBottom: 6 }}>{f.label}</label>
+              {fields.map((field, i) => (
+                <motion.div
+                  key={field.key}
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 + i * 0.09, duration: 0.45 }}
+                  style={{ marginBottom: 18 }}
+                >
+                  <label style={{
+                    display: 'block', fontSize: 12.5, fontWeight: 600,
+                    color: '#374151', marginBottom: 7, letterSpacing: 0.2,
+                  }}>
+                    {field.label}
+                  </label>
                   <input
-                    type={f.type}
-                    placeholder={f.placeholder}
-                    style={inputStyle}
-                    value={(form as any)[f.key]}
-                    onChange={e => setForm({ ...form, [f.key]: e.target.value })}
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    autoComplete={field.auto}
+                    style={{
+                      width: '100%', boxSizing: 'border-box',
+                      padding: '11px 16px',
+                      border: '1.5px solid #e5e7eb',
+                      borderRadius: 12, fontSize: 14,
+                      color: '#0a0a0f', background: '#ffffff',
+                      outline: 'none',
+                      transition: 'border-color 0.18s, box-shadow 0.18s',
+                    }}
+                    onFocus={e => {
+                      e.target.style.borderColor = '#10b981'
+                      e.target.style.boxShadow   = '0 0 0 3px rgba(16,185,129,0.12)'
+                    }}
+                    onBlur={e => {
+                      e.target.style.borderColor = '#e5e7eb'
+                      e.target.style.boxShadow   = 'none'
+                    }}
+                    value={(form as any)[field.key]}
+                    onChange={e => setForm({ ...form, [field.key]: e.target.value })}
                   />
-                </div>
+                </motion.div>
               ))}
 
-              <button type="submit" disabled={loading} style={{
-                width: '100%', padding: '12px',
-                background: loading ? 'hsl(var(--muted))' : 'hsl(var(--foreground))',
-                color: '#fff', border: 'none', borderRadius: 100,
-                fontSize: 14, fontWeight: 500,
-                cursor: loading ? 'not-allowed' : 'pointer',
-                marginTop: 8, transition: 'background 0.15s',
-              }}>
-                {loading ? 'Registrando…' : 'Crear cuenta'}
-              </button>
+              <motion.div
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.88, duration: 0.45 }}
+              >
+                <motion.button
+                  whileHover={{ scale: loading ? 1 : 1.018 }}
+                  whileTap={{ scale: loading ? 1 : 0.982 }}
+                  type="submit"
+                  disabled={loading}
+                  style={{
+                    width: '100%', marginTop: 8,
+                    padding: '13px',
+                    background: loading
+                      ? '#e5e7eb'
+                      : 'linear-gradient(135deg, #065f46 0%, #0d1f2e 100%)',
+                    color: loading ? '#9ca3af' : '#fff',
+                    border: 'none', borderRadius: 100,
+                    fontSize: 14, fontWeight: 600,
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    letterSpacing: 0.3,
+                    transition: 'background 0.2s',
+                  }}
+                >
+                  {loading ? 'Registrando…' : 'Crear cuenta →'}
+                </motion.button>
+              </motion.div>
 
-              <p style={{ textAlign: 'center', marginTop: 16, fontSize: 13, color: 'hsl(var(--muted-fg))' }}>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.05 }}
+                style={{ textAlign: 'center', marginTop: 22, fontSize: 13, color: '#9ca3af' }}
+              >
                 ¿Ya tenés cuenta?{' '}
-                <Link to="/login" style={{ color: 'hsl(var(--foreground))', fontWeight: 500 }}>Ingresar</Link>
-              </p>
+                <Link to="/login" style={{
+                  color: '#10b981', fontWeight: 600, textDecoration: 'none',
+                }}>
+                  Ingresar
+                </Link>
+              </motion.p>
             </form>
-          )}
-        </div>
+          </>
+        )}
       </motion.div>
     </div>
   )
