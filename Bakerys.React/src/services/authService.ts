@@ -6,9 +6,15 @@ const authApi = axios.create({
 })
 
 export interface LoginRequest {
-  nombreUsuario:     string
-  passwordHash:      string
   correoElectronico: string
+  passwordHash:      string
+}
+
+export interface RegistroRequest {
+  nombreUsuario:     string
+  correoElectronico: string
+  passwordHash:      string
+  codigoRegistro:    string
 }
 
 export interface TokenResponse {
@@ -20,7 +26,7 @@ export const authService = {
   login: (data: LoginRequest) =>
     authApi.post<TokenResponse>('/Autenticacion/login', data),
 
-  registrar: (data: LoginRequest) =>
+  registrar: (data: RegistroRequest) =>
     authApi.post('/Usuario/registrar', data),
 
   guardarToken: (token: string) =>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { authService } from '../../services/authService'
 
@@ -177,6 +177,11 @@ export default function Login() {
             >
               {loading ? 'Ingresando…' : 'Ingresar'}
             </button>
+
+            <p style={{ textAlign: 'center', marginTop: 16, fontSize: 13, color: 'hsl(var(--muted-fg))' }}>
+              ¿Primera vez?{' '}
+              <Link to="/registro" style={{ color: 'hsl(var(--foreground))', fontWeight: 500 }}>Crear cuenta</Link>
+            </p>
           </form>
         </div>
       </motion.div>
