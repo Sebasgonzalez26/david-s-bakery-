@@ -1,0 +1,6 @@
+@Bakerys.Seguridad_HostAddress = http://localhost:5118
+
+GET {{Bakerys.Seguridad_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
