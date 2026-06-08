@@ -49,9 +49,9 @@ export default function Registro() {
   }
 
   const fields = [
-    { label: 'Nombre de usuario',  key: 'nombreUsuario',     type: 'text',     placeholder: 'ej: panadero99',        auto: 'username' },
-    { label: 'Correo electrónico', key: 'correoElectronico', type: 'email',    placeholder: 'tu@correo.com',          auto: 'email' },
-    { label: 'Contraseña',          key: 'password',          type: 'password', placeholder: '••••••••',               auto: 'new-password' },
+    { label: 'Nombre de usuario',  key: 'nombreUsuario',     type: 'text',     placeholder: 'ej: panadero99',          auto: 'username' },
+    { label: 'Correo electrónico', key: 'correoElectronico', type: 'email',    placeholder: 'tu@correo.com',            auto: 'email' },
+    { label: 'Contraseña',          key: 'password',          type: 'password', placeholder: '••••••••',                 auto: 'new-password' },
     { label: 'Código de acceso',    key: 'codigoRegistro',    type: 'password', placeholder: 'Código del administrador', auto: 'off' },
   ] as const
 
@@ -65,7 +65,7 @@ export default function Registro() {
         transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         style={{
           flex: 1,
-          background: 'linear-gradient(145deg, #0a0a0f 0%, #13131f 45%, #0d1f2e 100%)',
+          background: 'linear-gradient(145deg, #120a04 0%, #1e1008 50%, #2a1508 100%)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -74,16 +74,16 @@ export default function Registro() {
           overflow: 'hidden',
         }}
       >
-        {/* Ambient glows */}
+        {/* Warm ambient glows */}
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
           <div style={{
             position: 'absolute', width: 480, height: 480, borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(16,185,129,0.13) 0%, transparent 65%)',
+            background: 'radial-gradient(circle, rgba(180,110,40,0.18) 0%, transparent 65%)',
             top: -120, right: -100,
           }} />
           <div style={{
             position: 'absolute', width: 340, height: 340, borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 65%)',
+            background: 'radial-gradient(circle, rgba(120,60,20,0.14) 0%, transparent 65%)',
             bottom: 80, left: -60,
           }} />
         </div>
@@ -93,12 +93,12 @@ export default function Registro() {
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          style={{ display: 'flex', alignItems: 'center', gap: 10, position: 'relative' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative' }}
         >
           <div style={{
             width: 54, height: 54, borderRadius: 15,
-            background: 'rgba(255,255,255,0.08)',
-            border: '1px solid rgba(255,255,255,0.14)',
+            background: 'rgba(255,255,255,0.07)',
+            border: '1px solid rgba(255,255,255,0.12)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             <span style={{ fontFamily: 'var(--font-display)', fontSize: 28, color: '#fff' }}>D</span>
@@ -126,7 +126,7 @@ export default function Registro() {
                   fontSize: 58,
                   fontWeight: 800,
                   letterSpacing: -2.5,
-                  color: char === '.' ? 'rgba(255,255,255,0.35)' : '#ffffff',
+                  color: char === '.' ? '#c9a060' : '#ffffff',
                   whiteSpace: 'pre',
                 }}
               >
@@ -139,12 +139,7 @@ export default function Registro() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.35, duration: 0.55 }}
-            style={{
-              color: 'rgba(255,255,255,0.38)',
-              fontSize: 15,
-              lineHeight: 1.75,
-              maxWidth: 300,
-            }}
+            style={{ color: 'rgba(255,255,255,0.38)', fontSize: 15, lineHeight: 1.75, maxWidth: 300 }}
           >
             Necesitás un código de acceso proporcionado por el administrador para registrarte.
           </motion.p>
@@ -155,12 +150,7 @@ export default function Registro() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.7, duration: 0.6 }}
-          style={{
-            fontSize: 11.5,
-            color: 'rgba(255,255,255,0.18)',
-            letterSpacing: 0.4,
-            position: 'relative',
-          }}
+          style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.18)', letterSpacing: 0.4, position: 'relative' }}
         >
           Desarrollado por{' '}
           <span style={{ color: 'rgba(255,255,255,0.38)', fontWeight: 600 }}>
@@ -176,7 +166,7 @@ export default function Registro() {
         transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         style={{
           width: 480,
-          background: '#f9f9fb',
+          background: '#fdf8f2',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -185,7 +175,6 @@ export default function Registro() {
         }}
       >
         {exito ? (
-          /* Success state */
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -198,7 +187,7 @@ export default function Registro() {
               transition={{ delay: 0.1, type: 'spring', stiffness: 220, damping: 14 }}
               style={{
                 width: 72, height: 72, borderRadius: '50%',
-                background: 'linear-gradient(135deg, #d1fae5, #a7f3d0)',
+                background: 'linear-gradient(135deg, #f5e6cc, #e8c88a)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 margin: '0 auto 24px',
                 fontSize: 32,
@@ -206,27 +195,23 @@ export default function Registro() {
             >
               ✓
             </motion.div>
-            <h2 style={{ fontSize: 22, fontWeight: 700, color: '#0a0a0f', marginBottom: 8 }}>
+            <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1e1008', marginBottom: 8 }}>
               ¡Cuenta creada!
             </h2>
-            <p style={{ fontSize: 14, color: '#9ca3af' }}>Redirigiendo al inicio de sesión…</p>
+            <p style={{ fontSize: 14, color: '#a89070' }}>Redirigiendo al inicio de sesión…</p>
           </motion.div>
         ) : (
           <>
-            {/* Form header */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, duration: 0.5 }}
               style={{ marginBottom: 32 }}
             >
-              <h2 style={{
-                fontSize: 26, fontWeight: 750, color: '#0a0a0f',
-                letterSpacing: -0.8, marginBottom: 6,
-              }}>
+              <h2 style={{ fontSize: 26, fontWeight: 750, color: '#1e1008', letterSpacing: -0.8, marginBottom: 6 }}>
                 Crear cuenta
               </h2>
-              <p style={{ fontSize: 13.5, color: '#9ca3af' }}>
+              <p style={{ fontSize: 13.5, color: '#a89070' }}>
                 Completá el formulario para acceder al sistema
               </p>
             </motion.div>
@@ -256,7 +241,7 @@ export default function Registro() {
                 >
                   <label style={{
                     display: 'block', fontSize: 12.5, fontWeight: 600,
-                    color: '#374151', marginBottom: 7, letterSpacing: 0.2,
+                    color: '#4a3020', marginBottom: 7, letterSpacing: 0.2,
                   }}>
                     {field.label}
                   </label>
@@ -267,18 +252,18 @@ export default function Registro() {
                     style={{
                       width: '100%', boxSizing: 'border-box',
                       padding: '11px 16px',
-                      border: '1.5px solid #e5e7eb',
+                      border: '1.5px solid #e8d8c4',
                       borderRadius: 12, fontSize: 14,
-                      color: '#0a0a0f', background: '#ffffff',
+                      color: '#1e1008', background: '#ffffff',
                       outline: 'none',
                       transition: 'border-color 0.18s, box-shadow 0.18s',
                     }}
                     onFocus={e => {
-                      e.target.style.borderColor = '#10b981'
-                      e.target.style.boxShadow   = '0 0 0 3px rgba(16,185,129,0.12)'
+                      e.target.style.borderColor = '#8b6040'
+                      e.target.style.boxShadow   = '0 0 0 3px rgba(139,96,64,0.12)'
                     }}
                     onBlur={e => {
-                      e.target.style.borderColor = '#e5e7eb'
+                      e.target.style.borderColor = '#e8d8c4'
                       e.target.style.boxShadow   = 'none'
                     }}
                     value={(form as any)[field.key]}
@@ -301,9 +286,9 @@ export default function Registro() {
                     width: '100%', marginTop: 8,
                     padding: '13px',
                     background: loading
-                      ? '#e5e7eb'
-                      : 'linear-gradient(135deg, #065f46 0%, #0d1f2e 100%)',
-                    color: loading ? '#9ca3af' : '#fff',
+                      ? '#e8d8c4'
+                      : 'linear-gradient(135deg, #3d1f08 0%, #1e1008 100%)',
+                    color: loading ? '#a89070' : '#fff',
                     border: 'none', borderRadius: 100,
                     fontSize: 14, fontWeight: 600,
                     cursor: loading ? 'not-allowed' : 'pointer',
@@ -319,12 +304,10 @@ export default function Registro() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.05 }}
-                style={{ textAlign: 'center', marginTop: 22, fontSize: 13, color: '#9ca3af' }}
+                style={{ textAlign: 'center', marginTop: 22, fontSize: 13, color: '#a89070' }}
               >
                 ¿Ya tenés cuenta?{' '}
-                <Link to="/login" style={{
-                  color: '#10b981', fontWeight: 600, textDecoration: 'none',
-                }}>
+                <Link to="/login" style={{ color: '#8b6040', fontWeight: 600, textDecoration: 'none' }}>
                   Ingresar
                 </Link>
               </motion.p>
