@@ -64,7 +64,7 @@ export default function Registro() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         style={{
-          flex: '0 0 52%',
+          flex: '0 0 60%',
           background: 'linear-gradient(145deg, #120a04 0%, #1e1008 50%, #2a1508 100%)',
           display: 'flex',
           flexDirection: 'column',
@@ -123,9 +123,9 @@ export default function Registro() {
                 }}
                 style={{
                   display: 'inline-block',
-                  fontSize: 58,
+                  fontSize: 72,
                   fontWeight: 800,
-                  letterSpacing: -2.5,
+                  letterSpacing: -3,
                   color: char === '.' ? '#c9a060' : '#ffffff',
                   whiteSpace: 'pre',
                 }}
@@ -139,7 +139,7 @@ export default function Registro() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.35, duration: 0.55 }}
-            style={{ color: 'rgba(255,255,255,0.38)', fontSize: 15, lineHeight: 1.75, maxWidth: 300 }}
+            style={{ color: 'rgba(255,255,255,0.38)', fontSize: 16, lineHeight: 1.75, maxWidth: 360 }}
           >
             Necesitás un código de acceso proporcionado por el administrador para registrarte.
           </motion.p>
