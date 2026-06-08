@@ -52,7 +52,7 @@ export default function Login() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         style={{
-          flex: 1,
+          flex: '0 0 52%',
           background: 'linear-gradient(145deg, #120a04 0%, #1e1008 50%, #2a1508 100%)',
           display: 'flex',
           flexDirection: 'column',
@@ -175,7 +175,7 @@ export default function Login() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         style={{
-          width: 480,
+          flex: 1,
           background: '#fdf8f2',
           display: 'flex',
           flexDirection: 'column',
