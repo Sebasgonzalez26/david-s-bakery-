@@ -1,4 +1,6 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { authService } from '../services/authService'
+import { LogOut } from 'lucide-react'
 
 const navLinks = [
   { to: '/',           label: 'Dashboard',  end: true },
@@ -10,7 +12,13 @@ const navLinks = [
 ]
 
 export default function Layout() {
-  const dateStr = new Date().toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' })
+  const navigate = useNavigate()
+  const dateStr  = new Date().toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' })
+
+  const cerrarSesion = () => {
+    authService.cerrarSesion()
+    navigate('/login')
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: 'hsl(var(--background))' }}>
@@ -83,10 +91,23 @@ export default function Layout() {
         <span style={{
           fontSize: 12, color: 'hsl(var(--muted-fg))',
           fontFamily: 'var(--font-body)',
-          paddingRight: 10, whiteSpace: 'nowrap', flexShrink: 0,
+          paddingRight: 6, whiteSpace: 'nowrap', flexShrink: 0,
         }}>
           {dateStr}
         </span>
+
+        {/* Logout */}
+        <button onClick={cerrarSesion} title="Cerrar sesión" style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: 34, height: 34, borderRadius: 100, border: '1px solid hsl(var(--border))',
+          background: 'transparent', cursor: 'pointer', color: 'hsl(var(--muted-fg))',
+          flexShrink: 0, marginRight: 4, transition: 'all 0.15s',
+        }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'hsl(var(--secondary))'; (e.currentTarget as HTMLButtonElement).style.color = 'hsl(var(--foreground))' }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; (e.currentTarget as HTMLButtonElement).style.color = 'hsl(var(--muted-fg))' }}
+        >
+          <LogOut size={14} />
+        </button>
       </header>
 
       {/* ── Page content ───────────────────────────────────── */}
