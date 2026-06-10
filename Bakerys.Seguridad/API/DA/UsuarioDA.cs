@@ -1,22 +1,22 @@
 using Abstracciones.Interfaces.DA;
 using Abstracciones.Modelos;
 using Dapper;
-using Microsoft.Data.SqlClient;
 
 namespace DA
 {
     public class UsuarioDA : IUsuarioDA
     {
-        private readonly SqlConnection _sqlConnection;
+        private readonly IRepositorioDapper _repositorioDapper;
 
         public UsuarioDA(IRepositorioDapper repositorioDapper)
         {
-            _sqlConnection = repositorioDapper.ObtenerRepositorio();
+            _repositorioDapper = repositorioDapper;
         }
 
         public async Task<Usuario?> ObtenerUsuario(UsuarioBase usuario)
         {
-            var resultado = await _sqlConnection.QueryAsync<Usuario>(
+            using var conn = _repositorioDapper.ObtenerRepositorio();
+            var resultado  = await conn.QueryAsync<Usuario>(
                 "ObtenerUsuario",
                 new { NombreUsuario = usuario.NombreUsuario, CorreoElectronico = usuario.CorreoElectronico },
                 commandType: System.Data.CommandType.StoredProcedure);
@@ -25,7 +25,8 @@ namespace DA
 
         public async Task<IEnumerable<Perfil>> ObtenerPerfilesxUsuario(UsuarioBase usuario)
         {
-            return await _sqlConnection.QueryAsync<Perfil>(
+            using var conn = _repositorioDapper.ObtenerRepositorio();
+            return await conn.QueryAsync<Perfil>(
                 "ObtenerPerfilesxUsuario",
                 new { NombreUsuario = usuario.NombreUsuario, CorreoElectronico = usuario.CorreoElectronico },
                 commandType: System.Data.CommandType.StoredProcedure);
@@ -33,7 +34,8 @@ namespace DA
 
         public async Task<Guid> CrearUsuario(UsuarioBase usuario)
         {
-            return await _sqlConnection.ExecuteScalarAsync<Guid>(
+            using var conn = _repositorioDapper.ObtenerRepositorio();
+            return await conn.ExecuteScalarAsync<Guid>(
                 "AgregarUsuario",
                 new { NombreUsuario = usuario.NombreUsuario, CorreoElectronico = usuario.CorreoElectronico, PasswordHash = usuario.PasswordHash },
                 commandType: System.Data.CommandType.StoredProcedure);
