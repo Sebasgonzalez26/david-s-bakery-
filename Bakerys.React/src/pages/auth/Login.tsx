@@ -291,6 +291,10 @@ export default function Login() {
             transition={{ delay: 0.95 }}
             style={{ textAlign: 'center', marginTop: 24, fontSize: 13, color: '#a89070' }}
           >
+            <Link to="/olvide-contrasena" style={{ color: '#a89070', textDecoration: 'none', fontSize: 12 }}>
+              ¿Olvidaste tu contraseña?
+            </Link>
+            <br />
             ¿Primera vez?{' '}
             <Link to="/registro" style={{ color: '#8b6040', fontWeight: 600, textDecoration: 'none' }}>
               Crear cuenta

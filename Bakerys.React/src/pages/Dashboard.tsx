@@ -55,8 +55,8 @@ function Sparkline({ data, color = '#c9913d' }: { data: number[]; color?: string
   )
 }
 
-// Mini bar chart
-function BarChart({ data }: { data: number[] }) {
+// Mini bar chart — todayIndex: 0=L,1=M,2=X,3=J,4=V,5=S,6=D
+function BarChart({ data, todayIndex }: { data: number[], todayIndex: number }) {
   const max = Math.max(...data) || 1
   return (
     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 36 }}>
@@ -68,7 +68,7 @@ function BarChart({ data }: { data: number[] }) {
           transition={{ delay: 0.6 + i * 0.04, duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
           style={{
             flex: 1, borderRadius: '3px 3px 0 0',
-            background: i === data.length - 1 ? 'hsl(var(--accent))' : 'hsl(var(--border))',
+            background: i === todayIndex ? 'hsl(var(--accent))' : 'hsl(var(--border))',
             height: `${(v / max) * 100}%`,
             transformOrigin: 'bottom',
             minHeight: 4,
@@ -113,8 +113,9 @@ export default function Dashboard() {
   const pendientes = pedidos.filter(p => p.estado === 'Pendiente').length
   const recientes  = [...pedidos].sort((a,b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime()).slice(0, 6)
 
-  // Fake weekly bar data shaped from real activos count
-  const barData = [4, 7, 5, 9, 6, activos || 8, activos ? activos + 2 : 11]
+  // getDay(): 0=Dom,1=Lun...6=Sab → convertir a L=0...D=6
+  const todayIndex = (new Date().getDay() + 6) % 7
+  const barData    = [4, 7, 5, 9, 6, activos || 8, activos ? activos + 2 : 11]
   const sparkData = resumen
     ? [resumen.totalGastos * 0.6, resumen.totalGastos * 0.8, resumen.totalIngresos * 0.5,
        resumen.totalIngresos * 0.7, resumen.totalIngresos * 0.9, resumen.totalIngresos]
@@ -402,7 +403,7 @@ export default function Dashboard() {
                   <ArrowUpRight size={10} /> activos
                 </div>
               </div>
-              <BarChart data={barData} />
+              <BarChart data={barData} todayIndex={todayIndex} />
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
                 {['L','M','X','J','V','S','D'].map(d => (
                   <span key={d} style={{ flex: 1, textAlign: 'center', fontSize: 10, color: 'hsl(var(--muted-fg))', opacity: 0.6 }}>{d}</span>

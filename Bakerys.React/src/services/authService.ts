@@ -41,4 +41,13 @@ export const authService = {
 
   estaAutenticado: () =>
     !!localStorage.getItem('bakery_token'),
+
+  solicitarRecuperacion: (correoElectronico: string) =>
+    authApi.post('/Recuperacion/solicitar', { correoElectronico }),
+
+  validarTokenRecuperacion: (token: string) =>
+    authApi.get(`/Recuperacion/validar?token=${token}`),
+
+  restablecerPassword: (token: string, passwordHash: string) =>
+    authApi.post('/Recuperacion/restablecer', { token, passwordHash }),
 }

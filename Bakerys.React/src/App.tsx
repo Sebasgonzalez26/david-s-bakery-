@@ -12,6 +12,8 @@ import InventarioIndex from './pages/inventario/InventarioIndex'
 import FinanzasIndex from './pages/finanzas/FinanzasIndex'
 import Login from './pages/auth/Login'
 import Registro from './pages/auth/Registro'
+import OlvideContrasena from './pages/auth/OlvideContrasena'
+import RestablecerContrasena from './pages/auth/RestablecerContrasena'
 import { authService } from './services/authService'
 
 function RutaProtegida({ children }: { children: React.ReactNode }) {
@@ -22,8 +24,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login"    element={<Login />} />
-        <Route path="/registro" element={<Registro />} />
+        <Route path="/login"                  element={<Login />} />
+        <Route path="/registro"              element={<Registro />} />
+        <Route path="/olvide-contrasena"     element={<OlvideContrasena />} />
+        <Route path="/restablecer-contrasena" element={<RestablecerContrasena />} />
 
         <Route path="/" element={
           <RutaProtegida>

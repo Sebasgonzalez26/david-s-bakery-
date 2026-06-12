@@ -1,3 +1,4 @@
+using Abstracciones.Interfaces;
 using Abstracciones.Interfaces.DA;
 using Abstracciones.Interfaces.Flujo;
 using Abstracciones.Modelos;
@@ -6,6 +7,7 @@ using DA.Repositorios;
 using Flujo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Servicios;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +49,9 @@ builder.Services.AddSingleton<IRepositorioDapper, RepositorioDapper>();
 builder.Services.AddScoped<IUsuarioDA,          UsuarioDA>();
 builder.Services.AddScoped<IUsuarioFlujo,       UsuarioFlujo>();
 builder.Services.AddScoped<IAutenticacionFlujo, AutenticacionFlujo>();
+builder.Services.AddScoped<IRecuperacionDA,     RecuperacionDA>();
+builder.Services.AddScoped<IRecuperacionFlujo,  RecuperacionFlujo>();
+builder.Services.AddTransient<IEmailService,    EmailService>();
 
 var app = builder.Build();
 
