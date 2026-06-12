@@ -14,7 +14,7 @@ export default function PagosIndex() {
   const [pedidos, setPedidos] = useState<Pedido[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({ pedidoId: 0, monto: '', tipoPago: 'Efectivo', notas: '' })
+  const [form, setForm] = useState({ pedidoId: 0, monto: '', tipoPago: 'Adelanto', notas: '' })
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
 
@@ -72,9 +72,9 @@ export default function PagosIndex() {
                 <FormGroup label="Monto (₡) *">
                   <input type="number" min="0" step="100" style={inputStyle} value={form.monto} onChange={e => setForm({ ...form, monto: e.target.value })} />
                 </FormGroup>
-                <FormGroup label="Método">
+                <FormGroup label="Tipo de pago">
                   <select style={inputStyle} value={form.tipoPago} onChange={e => setForm({ ...form, tipoPago: e.target.value })}>
-                    {['Efectivo','SINPE','Transferencia','Tarjeta'].map(m => <option key={m}>{m}</option>)}
+                    {['Adelanto','Abono','Saldo Total'].map(m => <option key={m}>{m}</option>)}
                   </select>
                 </FormGroup>
               </div>
