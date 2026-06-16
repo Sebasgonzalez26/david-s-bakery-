@@ -1,0 +1,36 @@
+name: Deploy Seguridad
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Bakerys.Seguridad/**'
+      - '.github/workflows/deploy-seguridad.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore Bakerys.Seguridad/API/Bakerys.Seguridad.csproj
+
+      - name: Build
+        run: dotnet build Bakerys.Seguridad/API/Bakerys.Seguridad.csproj --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish Bakerys.Seguridad/API/Bakerys.Seguridad.csproj --configuration Release --no-build --output ./publish-seguridad
+
+      - name: Deploy to Azure
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: seguridad-davids-bakery
+          publish-profile: ${{ secrets.AZURE_SEGURIDAD_PUBLISH_PROFILE }}
+          package: ./publish-seguridad
