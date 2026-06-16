@@ -51,7 +51,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Repositorio
-builder.Services.AddSingleton<IRepositorioDapper, RepositorioDapper>();
+builder.Services.AddScoped<IRepositorioDapper, RepositorioDapper>();
 
 // DA
 builder.Services.AddScoped<IClienteDA, ClienteDA>();

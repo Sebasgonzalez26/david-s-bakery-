@@ -4,13 +4,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF NOT EXISTS (SELECT 1 FROM Pedidos WHERE PedidoId = @PedidoId)
-    BEGIN
-        RAISERROR('El pedido no existe.', 16, 1);
-        RETURN;
-    END
-
-    -- Result Set 1: Pagos (el único que lee la API)
+    -- Pagos
     SELECT
         pg.PagoId       AS Id,
         pg.PedidoId,
