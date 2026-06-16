@@ -24,10 +24,6 @@ namespace API.Controllers
         public async Task<IActionResult> Obtener()
         {
             var resultado = await _clienteFlujo.Obtener();
-            if (!resultado.Any())
-            {
-                return NoContent();
-            }
             return Ok(resultado);
         }
 
