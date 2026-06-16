@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const authApi = axios.create({
-  baseURL: 'https://localhost:7092/api',
+  baseURL: import.meta.env.VITE_AUTH_URL,
   headers: { 'Content-Type': 'application/json' },
 })
 
