@@ -156,7 +156,7 @@ export default function InventarioIndex() {
                         <td style={{ padding: '14px 18px' }}>
                           <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 400, color: bajo ? '#b42a2a' : 'hsl(var(--foreground))', lineHeight: 1, marginBottom: 4 }}>{p.stockActual}</div>
                           <div style={{ height: 3, width: 64, background: 'hsl(var(--muted))', borderRadius: 2, overflow: 'hidden' }}>
-                            <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ delay: 0.3, duration: 0.5, ease: 'easeOut' }}
+                            <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ delay: 0.3, duration: 0.5 }}
                               style={{ height: '100%', background: bajo ? '#e05858' : '#28825a', borderRadius: 2 }} />
                           </div>
                         </td>

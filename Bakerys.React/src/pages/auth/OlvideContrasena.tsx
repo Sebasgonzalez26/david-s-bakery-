@@ -31,7 +31,7 @@ export default function OlvideContrasena() {
       <motion.div
         initial={{ opacity: 0, x: -48 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.75, ease: 'easeOut' }}
+        transition={{ duration: 0.75 }}
         style={{
           flex: '0 0 60%',
           background: 'linear-gradient(145deg, #120a04 0%, #1e1008 50%, #2a1508 100%)',
@@ -56,7 +56,7 @@ export default function OlvideContrasena() {
           {'No problem.'.split('').map((char, i) => (
             <motion.span key={i}
               initial={{ y: 72, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.45 + i * 0.028, duration: 0.55, ease: 'easeOut' }}
+              transition={{ delay: 0.45 + i * 0.028, duration: 0.55 }}
               style={{ display: 'inline-block', fontSize: 72, fontWeight: 800, letterSpacing: -3, color: char === '.' ? '#c9a060' : '#ffffff', whiteSpace: 'pre' }}
             >{char}</motion.span>
           ))}
@@ -75,7 +75,7 @@ export default function OlvideContrasena() {
       {/* Right panel */}
       <motion.div
         initial={{ opacity: 0, x: 48 }} animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.75, ease: 'easeOut' }}
+        transition={{ duration: 0.75 }}
         style={{ flex: 1, background: '#fdf8f2', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '64px 52px' }}
       >
         {enviado ? (
