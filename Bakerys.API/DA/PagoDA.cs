@@ -35,10 +35,9 @@ namespace DA
 
         public async Task<IEnumerable<PagoResponse>> ObtenerPorPedido(int pedidoId)
         {
-            using var multi = await _sqlconexion.QueryMultipleAsync("sp_ObtenerPagosPorPedido",
+            return await _sqlconexion.QueryAsync<PagoResponse>("sp_ObtenerPagosPorPedido",
                 new { PedidoId = pedidoId },
                 commandType: System.Data.CommandType.StoredProcedure);
-            return await multi.ReadAsync<PagoResponse>();
         }
 
         public async Task<decimal> ObtenerSaldoPendiente(int pedidoId)

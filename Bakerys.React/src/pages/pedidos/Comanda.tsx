@@ -15,17 +15,24 @@ export default function Comanda() {
   const [pedido, setPedido] = useState<Pedido | null>(null)
   const [pagos, setPagos] = useState<Pago[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     if (!id) return
-    Promise.all([
-      pedidoService.getById(Number(id)),
-      pagoService.getByPedido(Number(id)),
-    ]).then(([pRes, pgRes]) => {
-      setPedido(pRes.data)
-      setPagos(pgRes.data)
-      setLoading(false)
-    })
+    pedidoService.getById(Number(id))
+      .then(pRes => {
+        setPedido(pRes.data)
+        return pagoService.getByPedido(Number(id)).catch(() => ({ data: [] as Pago[] }))
+      })
+      .then(pgRes => {
+        setPagos(pgRes.data)
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error('Error cargando comanda:', err)
+        setError('No se pudo cargar el pedido. Verificá que el API esté corriendo.')
+        setLoading(false)
+      })
   }, [id])
 
   if (loading) return (
@@ -35,6 +42,7 @@ export default function Comanda() {
     </div>
   )
 
+  if (error) return <div style={{ textAlign: 'center', padding: 40, color: '#b42a2a', fontFamily: 'sans-serif' }}>{error}</div>
   if (!pedido) return <div style={{ textAlign: 'center', padding: 40, color: '#666' }}>Pedido no encontrado</div>
 
   const totalPagado = pedido.montoTotal - pedido.saldoPendiente
