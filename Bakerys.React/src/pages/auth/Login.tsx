@@ -107,7 +107,6 @@ export default function Login() {
                 transition={{
                   delay: 0.45 + i * 0.028,
                   duration: 0.55,
-                  ,
                 }}
                 style={{
                   display: 'inline-block',
