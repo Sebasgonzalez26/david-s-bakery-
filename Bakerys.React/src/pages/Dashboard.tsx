@@ -82,7 +82,7 @@ function BarChart({ data, todayIndex }: { data: number[], todayIndex: number }) 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 18 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.55, delay, ease: 'easeOut' },
+  transition: { duration: 0.55, delay },
 })
 
 // ── Component ─────────────────────────────────────────────────
@@ -464,7 +464,7 @@ export default function Dashboard() {
                           <span style={{ fontSize: 11, fontWeight: 600, color: '#b42a2a' }}>{p.stockActual}/{p.stockMinimo} {p.unidadMedida}</span>
                         </div>
                         <div style={{ height: 3, background: 'hsl(var(--muted))', borderRadius: 2, overflow: 'hidden' }}>
-                          <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ delay: 0.6, duration: 0.6, ease: 'easeOut' }}
+                          <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ delay: 0.6, duration: 0.6 }}
                             style={{ height: '100%', background: '#e05858', borderRadius: 2 }} />
                         </div>
                       </div>

@@ -62,7 +62,7 @@ export default function Registro() {
       <motion.div
         initial={{ opacity: 0, x: -48 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.75, ease: 'easeOut' }}
+        transition={{ duration: 0.75 }}
         style={{
           flex: '0 0 60%',
           background: 'linear-gradient(145deg, #120a04 0%, #1e1008 50%, #2a1508 100%)',
@@ -119,7 +119,6 @@ export default function Registro() {
                 transition={{
                   delay: 0.45 + i * 0.028,
                   duration: 0.55,
-                  ease: 'easeOut',
                 }}
                 style={{
                   display: 'inline-block',
@@ -163,7 +162,7 @@ export default function Registro() {
       <motion.div
         initial={{ opacity: 0, x: 48 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.75, ease: 'easeOut' }}
+        transition={{ duration: 0.75 }}
         style={{
           flex: 1,
           background: '#fdf8f2',
@@ -178,7 +177,7 @@ export default function Registro() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.5 }}
             style={{ textAlign: 'center' }}
           >
             <motion.div
