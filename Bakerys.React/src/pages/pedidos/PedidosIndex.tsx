@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Plus, Search, ShoppingBag } from 'lucide-react'
+import { Plus, Search, ShoppingBag, Printer } from 'lucide-react'
 import { pedidoService } from '../../services/pedidoService'
 import type { Pedido } from '../../types'
 
@@ -126,9 +126,19 @@ export default function PedidosIndex() {
                         {fmt(p.montoTotal)}
                       </td>
                       <td style={{ padding: '13px 18px' }}>
-                        <Link to={`/pedidos/${p.id}/editar`} style={{ fontSize: 12, fontWeight: 500, padding: '4px 12px', border: '1px solid hsl(var(--border))', borderRadius: 100, color: 'hsl(var(--foreground))', textDecoration: 'none', background: '#fff', whiteSpace: 'nowrap' }}>
-                          Editar
-                        </Link>
+                        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                          <Link to={`/pedidos/${p.id}/editar`} style={{ fontSize: 12, fontWeight: 500, padding: '4px 12px', border: '1px solid hsl(var(--border))', borderRadius: 100, color: 'hsl(var(--foreground))', textDecoration: 'none', background: '#fff', whiteSpace: 'nowrap' }}>
+                            Editar
+                          </Link>
+                          <a href={`/pedidos/${p.id}/comanda`} target="_blank" rel="noopener noreferrer"
+                            title="Imprimir comanda"
+                            style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, border: '1px solid hsl(var(--border))', borderRadius: '50%', color: 'hsl(var(--muted-fg))', background: '#fff', textDecoration: 'none', transition: 'all 0.12s', flexShrink: 0 }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'hsl(var(--secondary))'; (e.currentTarget as HTMLElement).style.color = 'hsl(var(--foreground))' }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#fff'; (e.currentTarget as HTMLElement).style.color = 'hsl(var(--muted-fg))' }}
+                          >
+                            <Printer size={13} />
+                          </a>
+                        </div>
                       </td>
                     </tr>
                   )
