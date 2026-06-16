@@ -52,7 +52,7 @@ export default function RestablecerContrasena() {
       {/* Left panel */}
       <motion.div
         initial={{ opacity: 0, x: -48 }} animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.75, ease: 'easeOut' }}
         style={{ flex: '0 0 60%', background: 'linear-gradient(145deg, #120a04 0%, #1e1008 50%, #2a1508 100%)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '44px 52px', position: 'relative', overflow: 'hidden' }}
       >
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
@@ -72,7 +72,7 @@ export default function RestablecerContrasena() {
           {'New start.'.split('').map((char, i) => (
             <motion.span key={i}
               initial={{ y: 72, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.45 + i * 0.028, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: 0.45 + i * 0.028, duration: 0.55, ease: 'easeOut' }}
               style={{ display: 'inline-block', fontSize: 72, fontWeight: 800, letterSpacing: -3, color: char === '.' ? '#c9a060' : '#ffffff', whiteSpace: 'pre' }}
             >{char}</motion.span>
           ))}
@@ -91,7 +91,7 @@ export default function RestablecerContrasena() {
       {/* Right panel */}
       <motion.div
         initial={{ opacity: 0, x: 48 }} animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.75, ease: 'easeOut' }}
         style={{ flex: 1, background: '#fdf8f2', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '64px 52px' }}
       >
         {/* Token inválido */}
