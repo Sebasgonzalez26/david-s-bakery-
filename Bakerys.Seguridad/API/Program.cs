@@ -45,7 +45,7 @@ builder.Services.AddCors(options =>
 });
 
 // DI
-builder.Services.AddSingleton<IRepositorioDapper, RepositorioDapper>();
+builder.Services.AddScoped<IRepositorioDapper, RepositorioDapper>();
 builder.Services.AddScoped<IUsuarioDA,          UsuarioDA>();
 builder.Services.AddScoped<IUsuarioFlujo,       UsuarioFlujo>();
 builder.Services.AddScoped<IAutenticacionFlujo, AutenticacionFlujo>();
