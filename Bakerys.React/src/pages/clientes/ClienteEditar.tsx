@@ -96,7 +96,6 @@ export default function ClienteEditar() {
                 style={{
                   padding: '9px 18px',
                   borderRadius: 100,
-                  border: 'none',
                   fontSize: 13,
                   fontWeight: 500,
                   cursor: toggling ? 'not-allowed' : 'pointer',
