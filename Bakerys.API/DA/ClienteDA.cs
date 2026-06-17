@@ -54,6 +54,16 @@ namespace DA
             return resultado;
         }
 
+        public async Task<int> Activar(int id)
+        {
+            string query = "sp_ActivarCliente";
+            var resultado = await _sqlconexion.ExecuteScalarAsync<int>(query, new
+            {
+                ClienteId = id
+            });
+            return resultado;
+        }
+
         public async Task<int> Editar(int id, ClienteRequest cliente)
         {
             string query = "sp_ActualizarCliente";

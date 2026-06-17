@@ -7,4 +7,5 @@ export const clienteService = {
   create: (data: ClienteRequest) => api.post('/Cliente', data),
   update: (id: number, data: ClienteRequest) => api.put(`/Cliente/${id}`, data),
   deactivate: (id: number) => api.delete(`/Cliente/${id}`),
+  activate: (id: number) => api.put(`/Cliente/${id}/activar`),
 }

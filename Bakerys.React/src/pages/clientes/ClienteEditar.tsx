@@ -9,8 +9,10 @@ export default function ClienteEditar() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [form, setForm] = useState({ nombre: '', telefono: '', email: '', notas: '' })
+  const [activo, setActivo] = useState(true)
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [toggling, setToggling] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -18,6 +20,7 @@ export default function ClienteEditar() {
     clienteService.getById(Number(id)).then(r => {
       const c = r.data
       setForm({ nombre: c.nombre, telefono: c.telefono, email: c.email ?? '', notas: c.notas ?? '' })
+      setActivo(c.activo)
       setLoading(false)
     })
   }, [id])
@@ -30,6 +33,25 @@ export default function ClienteEditar() {
       await clienteService.update(Number(id), form)
       navigate('/clientes')
     } catch { setError('Error al guardar.'); setSaving(false) }
+  }
+
+  const handleToggleActivo = async () => {
+    setToggling(true)
+    setError('')
+    try {
+      if (activo) {
+        await clienteService.deactivate(Number(id))
+        setActivo(false)
+      } else {
+        await clienteService.activate(Number(id))
+        setActivo(true)
+      }
+    } catch (err: any) {
+      const msg = err?.response?.data || (activo ? 'No se pudo desactivar el cliente.' : 'No se pudo activar el cliente.')
+      setError(msg)
+    } finally {
+      setToggling(false)
+    }
   }
 
   if (loading) return (
@@ -46,6 +68,13 @@ export default function ClienteEditar() {
         <FormCard title="Datos del Cliente" idLabel={`ID: ${id}`}>
           <form onSubmit={handleSubmit} style={{ padding: '24px' }}>
             {error && <div style={errorAlertStyle}>{error}</div>}
+
+            {!activo && (
+              <div style={{ background: '#fff3cd', border: '1px solid #ffc107', borderRadius: 10, padding: '10px 14px', marginBottom: 16, fontSize: 13, color: '#856404', display: 'flex', alignItems: 'center', gap: 8 }}>
+                ⚠️ Este cliente está <strong>inactivo</strong>. Podés reactivarlo abajo.
+              </div>
+            )}
+
             <FormGroup label="Nombre completo *">
               <input style={inputStyle} value={form.nombre} onChange={e => setForm({ ...form, nombre: e.target.value })} />
             </FormGroup>
@@ -58,9 +87,32 @@ export default function ClienteEditar() {
             <FormGroup label="Notas">
               <textarea style={{ ...inputStyle, resize: 'vertical', minHeight: 80 }} value={form.notas} onChange={e => setForm({ ...form, notas: e.target.value })} />
             </FormGroup>
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 8 }}>
-              <Link to="/clientes" style={outlineBtnStyle}>Cancelar</Link>
-              <button type="submit" disabled={saving} style={primaryBtnStyle}>{saving ? 'Guardando…' : '✓ Guardar Cambios'}</button>
+
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
+              <button
+                type="button"
+                disabled={toggling}
+                onClick={handleToggleActivo}
+                style={{
+                  padding: '9px 18px',
+                  borderRadius: 100,
+                  border: 'none',
+                  fontSize: 13,
+                  fontWeight: 500,
+                  cursor: toggling ? 'not-allowed' : 'pointer',
+                  background: activo ? '#fef2f2' : '#f0fdf4',
+                  color: activo ? '#b42a2a' : '#28825a',
+                  border: activo ? '1px solid #fca5a5' : '1px solid #86efac',
+                  opacity: toggling ? 0.6 : 1,
+                }}
+              >
+                {toggling ? '…' : activo ? '⛔ Desactivar cliente' : '✅ Reactivar cliente'}
+              </button>
+
+              <div style={{ display: 'flex', gap: 8 }}>
+                <Link to="/clientes" style={outlineBtnStyle}>Cancelar</Link>
+                <button type="submit" disabled={saving} style={primaryBtnStyle}>{saving ? 'Guardando…' : '✓ Guardar Cambios'}</button>
+              </div>
             </div>
           </form>
         </FormCard>

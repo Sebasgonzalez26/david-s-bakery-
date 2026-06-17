@@ -10,4 +10,5 @@ public interface IClienteDA
     Task<int>                          Agregar(ClienteRequest cliente);
     Task<int>                          Editar(int id, ClienteRequest cliente);
     Task<int>                          Desactivar(int id);
+    Task<int>                          Activar(int id);
 }
