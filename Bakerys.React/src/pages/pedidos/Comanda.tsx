@@ -290,10 +290,20 @@ export default function Comanda() {
           letter-spacing: 0.5px;
         }
 
+        @page {
+          size: A4 portrait;
+          margin: 12mm;
+        }
+
         @media print {
           body { background: #fff; }
           .btn-print { display: none !important; }
-          .comanda-wrapper { padding: 0; background: #fff; }
+          .comanda-wrapper {
+            padding: 0;
+            background: #fff;
+            min-height: unset;
+            display: block;
+          }
           .comanda {
             box-shadow: none;
             border-radius: 0;
