@@ -17,6 +17,8 @@ export default function PagosIndex() {
   const [form, setForm] = useState({ pedidoId: 0, monto: '', tipoPago: 'Adelanto', notas: '' })
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [busquedaPedido, setBusquedaPedido] = useState('')
+  const [showDropdown, setShowDropdown] = useState(false)
 
   const cargar = () => {
     setLoading(true)
@@ -63,10 +65,41 @@ export default function PagosIndex() {
             <form onSubmit={handleSubmit} style={{ padding: '24px' }}>
               {error && <div style={errorAlertStyle}>{error}</div>}
               <FormGroup label="Pedido *">
-                <select style={inputStyle} value={form.pedidoId} onChange={e => setForm({ ...form, pedidoId: Number(e.target.value) })}>
-                  <option value={0}>Seleccionar pedido…</option>
-                  {pedidos.map(p => <option key={p.id} value={p.id}>#{p.id} — {p.cliente} (saldo: {fmt(p.saldoPendiente)})</option>)}
-                </select>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    style={{ ...inputStyle, cursor: 'text' }}
+                    placeholder="Buscar por nombre o #pedido…"
+                    value={busquedaPedido}
+                    onChange={e => { setBusquedaPedido(e.target.value); setShowDropdown(true); setForm({ ...form, pedidoId: 0 }) }}
+                    onFocus={() => setShowDropdown(true)}
+                    onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+                    autoComplete="off"
+                  />
+                  {showDropdown && (
+                    <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid hsl(var(--border))', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.10)', zIndex: 100, maxHeight: 220, overflowY: 'auto', marginTop: 4 }}>
+                      {pedidos
+                        .filter(p => {
+                          const q = busquedaPedido.toLowerCase()
+                          return !q || p.cliente.toLowerCase().includes(q) || String(p.id).includes(q)
+                        })
+                        .map(p => (
+                          <div
+                            key={p.id}
+                            onMouseDown={() => { setForm({ ...form, pedidoId: p.id }); setBusquedaPedido(`#${p.id} — ${p.cliente}`); setShowDropdown(false) }}
+                            style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', borderBottom: '1px solid hsl(var(--muted))', color: 'hsl(var(--foreground))' }}
+                            onMouseEnter={e => (e.currentTarget.style.background = 'hsl(var(--secondary))')}
+                            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                          >
+                            <span style={{ fontWeight: 600 }}>#{p.id}</span> — {p.cliente}
+                            <span style={{ float: 'right', color: '#b42a2a', fontWeight: 500 }}>{fmt(p.saldoPendiente)}</span>
+                          </div>
+                        ))}
+                      {pedidos.filter(p => { const q = busquedaPedido.toLowerCase(); return !q || p.cliente.toLowerCase().includes(q) || String(p.id).includes(q) }).length === 0 && (
+                        <div style={{ padding: '12px 14px', fontSize: 13, color: 'hsl(var(--muted-fg))', textAlign: 'center' }}>Sin resultados</div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </FormGroup>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                 <FormGroup label="Monto (₡) *">

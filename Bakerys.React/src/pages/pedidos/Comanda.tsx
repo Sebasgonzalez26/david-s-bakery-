@@ -291,8 +291,8 @@ export default function Comanda() {
         }
 
         @page {
-          size: A4 portrait;
-          margin: 12mm;
+          size: 58mm auto;
+          margin: 2mm 1mm;
         }
 
         @media print {
@@ -310,6 +310,29 @@ export default function Comanda() {
             max-width: 100%;
             width: 100%;
           }
+          .comanda-header { padding: 8px 6px 6px; }
+          .comanda-header .bakery-name { font-size: 15px; }
+          .comanda-header .bakery-sub { font-size: 8px; letter-spacing: 1.5px; }
+          .comanda-meta { padding: 5px 6px; font-size: 9px; }
+          .comanda-meta .pedido-id { font-size: 12px; }
+          .comanda-meta .estado-badge { font-size: 8px; padding: 2px 6px; }
+          .comanda-body { padding: 8px 6px; }
+          .section-title { font-size: 7px; letter-spacing: 1px; margin-bottom: 3px; }
+          .client-name { font-size: 13px; }
+          .client-phone { font-size: 10px; }
+          .descripcion-box { font-size: 10px; padding: 6px 8px; min-height: 30px; }
+          .entrega-label { font-size: 8px; }
+          .entrega-value { font-size: 10px; }
+          .envio-badge { font-size: 9px; padding: 2px 8px; margin-top: 5px; }
+          .pagos-table th { font-size: 7px; padding-bottom: 3px; }
+          .pagos-table td { font-size: 9px; padding: 4px 0; }
+          .totales-row { font-size: 10px; padding: 3px 0; }
+          .totales-row.total-final { font-size: 13px; padding-top: 6px; }
+          .totales-row.saldo-row { font-size: 11px; }
+          .comanda-footer { padding: 6px; font-size: 8px; }
+          .info-block { margin-bottom: 10px; }
+          .divider { margin: 8px 0; }
+          .entrega-row { gap: 5px; margin-top: 6px; }
         }
       `}</style>
 
