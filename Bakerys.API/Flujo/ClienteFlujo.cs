@@ -29,6 +29,11 @@ namespace Flujo
             return _clienteDA.Desactivar(id);
         }
 
+        public Task<int> Activar(int id)
+        {
+            return _clienteDA.Activar(id);
+        }
+
         public Task<int> Editar(int id, ClienteRequest cliente)
         {
             return _clienteDA.Editar(id, cliente);

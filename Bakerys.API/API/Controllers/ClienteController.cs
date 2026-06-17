@@ -61,5 +61,12 @@ namespace API.Controllers
             var resultado = await _clienteFlujo.Desactivar(id);
             return Ok(resultado);
         }
+
+        [HttpPut("{id}/activar")]
+        public async Task<IActionResult> Activar(int id)
+        {
+            var resultado = await _clienteFlujo.Activar(id);
+            return Ok(resultado);
+        }
     }
 }

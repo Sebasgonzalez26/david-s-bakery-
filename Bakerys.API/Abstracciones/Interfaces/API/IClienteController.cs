@@ -13,6 +13,6 @@ namespace Abstracciones.Interfaces.API
         Task<IActionResult> Agregar(ClienteRequest cliente);
         Task<IActionResult> Editar(int id, ClienteRequest cliente);
         Task<IActionResult> Desactivar(int id);
-
+        Task<IActionResult> Activar(int id);
     }
 }
