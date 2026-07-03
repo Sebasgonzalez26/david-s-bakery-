@@ -22,6 +22,7 @@ export default function PedidosIndex() {
   const [pedidos, setPedidos] = useState<Pedido[]>([])
   const [filtroEstado, setFiltroEstado] = useState('Todos')
   const [busqueda, setBusqueda] = useState('')
+  const [filtroFecha, setFiltroFecha] = useState('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -29,8 +30,11 @@ export default function PedidosIndex() {
   }, [])
 
   const filtrados = pedidos
-    .filter(p => (filtroEstado === 'Todos' || p.estado === filtroEstado) &&
-      (p.cliente.toLowerCase().includes(busqueda.toLowerCase()) || p.telefono.includes(busqueda)))
+    .filter(p =>
+      (filtroEstado === 'Todos' || p.estado === filtroEstado) &&
+      (p.cliente.toLowerCase().includes(busqueda.toLowerCase()) || p.telefono.includes(busqueda)) &&
+      (!filtroFecha || p.fechaEntrega.startsWith(filtroFecha))
+    )
     .sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime())
 
   return (
@@ -56,6 +60,19 @@ export default function PedidosIndex() {
           <Search size={13} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'hsl(var(--muted-fg))' }} />
           <input type="text" placeholder="Buscar cliente…" value={busqueda} onChange={e => setBusqueda(e.target.value)}
             style={{ paddingLeft: 34, paddingRight: 16, paddingTop: 8, paddingBottom: 8, border: '1px solid hsl(var(--border))', borderRadius: 100, fontSize: 13, color: 'hsl(var(--foreground))', background: '#fff', outline: 'none', width: 240 }} />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <input
+            type="date"
+            value={filtroFecha}
+            onChange={e => setFiltroFecha(e.target.value)}
+            style={{ padding: '7px 14px', border: '1px solid hsl(var(--border))', borderRadius: 100, fontSize: 13, color: filtroFecha ? 'hsl(var(--foreground))' : 'hsl(var(--muted-fg))', background: '#fff', outline: 'none', cursor: 'pointer' }}
+          />
+          {filtroFecha && (
+            <button onClick={() => setFiltroFecha('')} style={{ padding: '6px 12px', borderRadius: 100, fontSize: 12, border: '1px solid hsl(var(--border))', background: '#fff', color: 'hsl(var(--muted-fg))', cursor: 'pointer' }}>
+              ✕ Limpiar
+            </button>
+          )}
         </div>
         <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
           {ESTADOS.map(e => (
