@@ -18,6 +18,11 @@ namespace Flujo
             return _pagoDA.Agregar(pago);
         }
 
+        public Task<int> Editar(int id, PagoEditRequest pago)
+        {
+            return _pagoDA.Editar(id, pago);
+        }
+
         public Task<IEnumerable<PagoResponse>> ObtenerTodos()
         {
             return _pagoDA.ObtenerTodos();
