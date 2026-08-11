@@ -16,6 +16,14 @@ public class PagoRequest : PagoBase
     public int PedidoId { get; set; }
 }
 
+public class PagoEditRequest
+{
+    [Range(0.01, double.MaxValue, ErrorMessage = "El monto debe ser mayor a cero")]
+    public decimal Monto    { get; set; }
+    public string  TipoPago { get; set; } = "Adelanto";
+    public string? Notas    { get; set; }
+}
+
 public class PagoResponse : PagoBase
 {
     public int      Id             { get; set; }

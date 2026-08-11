@@ -14,6 +14,17 @@ namespace DA
             _sqlconexion = repositorioDapper.ObtenerRepositorio();
         }
 
+        public async Task<int> Editar(int id, PagoEditRequest pago)
+        {
+            return await _sqlconexion.ExecuteScalarAsync<int>("sp_EditarPago", new
+            {
+                PagoId   = id,
+                Monto    = pago.Monto,
+                TipoPago = pago.TipoPago,
+                Notas    = pago.Notas
+            }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
         public async Task<int> Agregar(PagoRequest pago)
         {
             var resultado = await _sqlconexion.ExecuteScalarAsync<int>("sp_RegistrarPago", new

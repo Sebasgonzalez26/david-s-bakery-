@@ -13,5 +13,6 @@ namespace Abstracciones.Interfaces.Flujo
         Task<IEnumerable<PagoResponse>> ObtenerPorPedido(int pedidoId);
         Task<decimal> ObtenerSaldoPendiente(int pedidoId);
         Task<int> Agregar(PagoRequest pago);
+        Task<int> Editar(int id, PagoEditRequest pago);
     }
 }

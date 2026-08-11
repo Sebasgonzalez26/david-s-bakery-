@@ -27,6 +27,13 @@ namespace API.Controllers
             return Ok(resultado);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Editar(int id, PagoEditRequest pago)
+        {
+            var resultado = await _pagoFlujo.Editar(id, pago);
+            return Ok(resultado);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Agregar(PagoRequest pago)
         {
