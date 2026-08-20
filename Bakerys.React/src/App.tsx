@@ -8,6 +8,7 @@ import PedidosIndex from './pages/pedidos/PedidosIndex'
 import PedidoAgregar from './pages/pedidos/PedidoAgregar'
 import PedidoEditar from './pages/pedidos/PedidoEditar'
 import Comanda from './pages/pedidos/Comanda'
+import ComandasDia from './pages/pedidos/ComandasDia'
 import PagosIndex from './pages/pagos/PagosIndex'
 import InventarioIndex from './pages/inventario/InventarioIndex'
 import FinanzasIndex from './pages/finanzas/FinanzasIndex'
@@ -26,6 +27,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/pedidos/:id/comanda"   element={<RutaProtegida><Comanda /></RutaProtegida>} />
+        <Route path="/comandas-dia"           element={<RutaProtegida><ComandasDia /></RutaProtegida>} />
         <Route path="/login"                  element={<Login />} />
         <Route path="/registro"              element={<Registro />} />
         <Route path="/olvide-contrasena"     element={<OlvideContrasena />} />
