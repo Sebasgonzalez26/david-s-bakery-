@@ -48,9 +48,14 @@ export default function PedidosIndex() {
           </h1>
           <p style={{ fontSize: 13, color: 'hsl(var(--muted-fg))' }}>{pedidos.length} pedidos registrados</p>
         </div>
-        <Link to="/pedidos/nuevo" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'hsl(var(--foreground))', color: '#fff', borderRadius: 100, padding: '10px 20px', fontSize: 13, fontWeight: 500, textDecoration: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
-          <Plus size={14} /> Nuevo Pedido
-        </Link>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <Link to="/comandas-dia" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'hsl(var(--secondary))', color: 'hsl(var(--foreground))', borderRadius: 100, padding: '10px 18px', fontSize: 13, fontWeight: 500, textDecoration: 'none', border: '1px solid hsl(var(--border))' }}>
+            <Printer size={14} /> Imprimir día
+          </Link>
+          <Link to="/pedidos/nuevo" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'hsl(var(--foreground))', color: '#fff', borderRadius: 100, padding: '10px 20px', fontSize: 13, fontWeight: 500, textDecoration: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
+            <Plus size={14} /> Nuevo Pedido
+          </Link>
+        </div>
       </motion.div>
 
       {/* Filters */}

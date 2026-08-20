@@ -1,0 +1,364 @@
+import { useEffect, useState } from 'react'
+import { pedidoService } from '../../services/pedidoService'
+import { pagoService } from '../../services/pagoService'
+import type { Pedido, Pago } from '../../types'
+
+const fmt = (n: number) => '₡' + n.toLocaleString('es-CR', { minimumFractionDigits: 0 })
+const fmtDate = (s: string) =>
+  new Date(s).toLocaleDateString('es-CR', { day: '2-digit', month: 'long', year: 'numeric' })
+const fmtDateTime = (s: string) =>
+  new Date(s).toLocaleString('es-CR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+
+type PedidoConPagos = { pedido: Pedido; pagos: Pago[] }
+
+export default function ComandasDia() {
+  const today = new Date().toISOString().split('T')[0]
+  const [fecha, setFecha] = useState(today)
+  const [todos, setTodos] = useState<Pedido[]>([])
+  const [items, setItems] = useState<PedidoConPagos[]>([])
+  const [loading, setLoading] = useState(true)
+  const [cargandoPagos, setCargandoPagos] = useState(false)
+
+  useEffect(() => {
+    pedidoService.getAll()
+      .then(r => setTodos(r.data))
+      .catch(() => setTodos([]))
+      .finally(() => setLoading(false))
+  }, [])
+
+  useEffect(() => {
+    if (!fecha || todos.length === 0) { setItems([]); return }
+    const filtrados = todos.filter(p =>
+      p.estado !== 'Cancelado' && p.fechaEntrega.startsWith(fecha)
+    )
+    if (filtrados.length === 0) { setItems([]); return }
+
+    setCargandoPagos(true)
+    Promise.all(
+      filtrados.map(p =>
+        pagoService.getByPedido(p.id)
+          .then(r => ({ pedido: p, pagos: r.data }))
+          .catch(() => ({ pedido: p, pagos: [] as Pago[] }))
+      )
+    ).then(resultado => {
+      setItems(resultado)
+      setCargandoPagos(false)
+    })
+  }, [fecha, todos])
+
+  const estadoColor: Record<string, string> = {
+    'Pendiente':  '#b86e10',
+    'En Proceso': '#3a6ac4',
+    'Listo':      '#8f621a',
+    'Entregado':  '#28825a',
+    'Cancelado':  '#b42a2a',
+  }
+
+  return (
+    <>
+      <style>{`
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #f5f0ea; font-family: 'Georgia', serif; }
+
+        .toolbar {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          padding: 20px 28px;
+          background: #3d2b1a;
+          flex-wrap: wrap;
+        }
+        .toolbar label {
+          font-family: sans-serif;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.6);
+        }
+        .toolbar input[type="date"] {
+          border: none;
+          border-radius: 8px;
+          padding: 7px 12px;
+          font-size: 14px;
+          font-family: sans-serif;
+          background: rgba(255,255,255,0.15);
+          color: #fff;
+          cursor: pointer;
+          outline: none;
+        }
+        .toolbar input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+        .badge {
+          background: rgba(255,255,255,0.15);
+          color: #fff;
+          border-radius: 100px;
+          padding: 4px 12px;
+          font-family: sans-serif;
+          font-size: 12px;
+        }
+        .btn-print {
+          margin-left: auto;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #fff;
+          color: #3d2b1a;
+          border: none;
+          border-radius: 100px;
+          padding: 9px 22px;
+          font-size: 13px;
+          font-weight: 600;
+          font-family: sans-serif;
+          cursor: pointer;
+        }
+        .btn-print:disabled { opacity: 0.45; cursor: default; }
+
+        .wrapper {
+          padding: 28px 20px 48px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 32px;
+        }
+
+        .empty-state {
+          text-align: center;
+          padding: 60px 20px;
+          color: #6b5240;
+          font-family: sans-serif;
+          font-size: 14px;
+        }
+
+        /* ── Comanda card ── */
+        .comanda {
+          background: #fff;
+          width: 100%;
+          max-width: 480px;
+          border-radius: 12px;
+          box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+          overflow: hidden;
+        }
+        .comanda-header { background: #3d2b1a; padding: 28px 28px 22px; text-align: center; color: #fff; }
+        .comanda-header .bakery-name { font-size: 28px; font-weight: 700; letter-spacing: 1px; margin-bottom: 2px; }
+        .comanda-header .bakery-sub { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; opacity: 0.65; font-family: sans-serif; }
+        .comanda-meta { background: #f5f0ea; padding: 12px 28px; display: flex; justify-content: space-between; align-items: center; font-family: sans-serif; font-size: 12px; color: #6b5240; border-bottom: 1px dashed #d4bfa5; }
+        .comanda-meta .pedido-id { font-size: 16px; font-weight: 700; color: #3d2b1a; }
+        .comanda-meta .estado-badge { padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; font-family: sans-serif; border: 1.5px solid currentColor; }
+        .comanda-body { padding: 24px 28px; }
+        .section-title { font-family: sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #a07850; margin-bottom: 8px; }
+        .info-block { margin-bottom: 22px; }
+        .client-name { font-size: 22px; font-weight: 700; color: #1a0f08; margin-bottom: 2px; }
+        .client-phone { font-family: sans-serif; font-size: 14px; color: #6b5240; }
+        .divider { border: none; border-top: 1px dashed #d4bfa5; margin: 18px 0; }
+        .descripcion-box { background: #faf7f3; border: 1px solid #e8ddd0; border-radius: 8px; padding: 14px 16px; font-size: 14px; color: #2a1a0e; line-height: 1.6; white-space: pre-wrap; min-height: 60px; }
+        .entrega-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-family: sans-serif; }
+        .entrega-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #a07850; }
+        .entrega-value { font-size: 14px; font-weight: 700; color: #1a0f08; }
+        .envio-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 100px; font-family: sans-serif; font-size: 12px; font-weight: 600; margin-top: 12px; }
+        .envio-si { background: rgba(40,130,90,0.10); color: #28825a; border: 1px solid rgba(40,130,90,0.25); }
+        .envio-no { background: rgba(90,60,20,0.08); color: #6b4020; border: 1px solid rgba(90,60,20,0.18); }
+        .pagos-table { width: 100%; border-collapse: collapse; font-family: sans-serif; }
+        .pagos-table th { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #a07850; text-align: left; padding-bottom: 6px; border-bottom: 1px solid #e8ddd0; }
+        .pagos-table td { font-size: 13px; color: #2a1a0e; padding: 7px 0; border-bottom: 1px solid #f0e8de; }
+        .pagos-table td:last-child { text-align: right; font-weight: 600; }
+        .pagos-empty { font-family: sans-serif; font-size: 13px; color: #a07850; font-style: italic; padding: 8px 0; }
+        .totales { font-family: sans-serif; }
+        .totales-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; color: #4a3020; }
+        .totales-row.total-final { border-top: 2px solid #3d2b1a; margin-top: 6px; padding-top: 10px; font-size: 18px; font-weight: 700; color: #1a0f08; font-family: 'Georgia', serif; }
+        .totales-row.saldo-row { font-size: 14px; font-weight: 700; color: #b42a2a; }
+        .totales-row.saldo-ok { color: #28825a; }
+        .comanda-footer { background: #3d2b1a; padding: 16px 28px; text-align: center; color: rgba(255,255,255,0.55); font-family: sans-serif; font-size: 11px; letter-spacing: 0.5px; }
+
+        @page { size: 58mm auto; margin: 2mm 1mm; }
+
+        @media print {
+          .toolbar { display: none !important; }
+          body { background: #fff; }
+          .wrapper { padding: 0; background: #fff; }
+
+          .comanda {
+            box-shadow: none;
+            border-radius: 0;
+            max-width: 100%;
+            width: 100%;
+            page-break-after: always;
+          }
+          .comanda:last-child { page-break-after: avoid; }
+
+          * { color: #000 !important; background: #fff !important; border-color: #000 !important; }
+          .comanda-header { background: #000 !important; padding: 8px 6px 6px; }
+          .comanda-header * { color: #fff !important; }
+          .comanda-footer { background: #000 !important; padding: 6px; font-size: 8px; }
+          .comanda-footer * { color: #fff !important; }
+
+          .comanda-meta { padding: 5px 6px; font-size: 9px; }
+          .comanda-meta .pedido-id { font-size: 12px; }
+          .comanda-meta .estado-badge { font-size: 8px; padding: 2px 6px; border: 1px solid #000 !important; }
+          .comanda-header .bakery-name { font-size: 15px; }
+          .comanda-header .bakery-sub { font-size: 8px; letter-spacing: 1.5px; }
+          .comanda-body { padding: 8px 6px; }
+          .section-title { font-size: 7px; letter-spacing: 1px; margin-bottom: 3px; }
+          .client-name { font-size: 13px; }
+          .client-phone { font-size: 10px; }
+          .descripcion-box { font-size: 10px; padding: 6px 8px; min-height: 30px; border: 1px solid #000 !important; }
+          .entrega-label { font-size: 8px; }
+          .entrega-value { font-size: 10px; }
+          .envio-badge { font-size: 9px; padding: 2px 8px; margin-top: 5px; border: 1px solid #000 !important; }
+          .pagos-table th { font-size: 7px; padding-bottom: 3px; }
+          .pagos-table td { font-size: 9px; padding: 4px 0; }
+          .totales-row { font-size: 10px; padding: 3px 0; }
+          .totales-row.total-final { font-size: 13px; padding-top: 6px; border-top: 2px solid #000 !important; }
+          .totales-row.saldo-row { font-size: 11px; }
+          .info-block { margin-bottom: 10px; }
+          .divider { border-top: 1px dashed #000 !important; margin: 8px 0; }
+          .entrega-row { gap: 5px; margin-top: 6px; }
+        }
+      `}</style>
+
+      {/* Toolbar */}
+      <div className="toolbar">
+        <label>Fecha de entrega</label>
+        <input
+          type="date"
+          value={fecha}
+          onChange={e => setFecha(e.target.value)}
+        />
+        {!loading && (
+          <span className="badge">
+            {items.length} {items.length === 1 ? 'pedido' : 'pedidos'}
+          </span>
+        )}
+        <button
+          className="btn-print"
+          disabled={items.length === 0 || cargandoPagos}
+          onClick={() => window.print()}
+        >
+          🖨️ Imprimir todas
+        </button>
+      </div>
+
+      <div className="wrapper">
+        {loading || cargandoPagos ? (
+          <div className="empty-state">
+            <div style={{ width: 28, height: 28, border: '2px solid #e5d5c0', borderTopColor: '#8f621a', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 12px' }} />
+            <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+            Cargando…
+          </div>
+        ) : items.length === 0 ? (
+          <div className="empty-state">
+            No hay pedidos para esta fecha.
+          </div>
+        ) : (
+          items.map(({ pedido, pagos }) => {
+            const totalPagado = pedido.montoTotal - pedido.saldoPendiente
+            const tieneEnvio = pedido.notas?.toLowerCase().includes('envío') || pedido.notas?.toLowerCase().includes('envio')
+            const notasLimpias = pedido.notas?.trim() || '—'
+            const colorEstado = estadoColor[pedido.estado] ?? '#666'
+
+            return (
+              <div key={pedido.id} className="comanda">
+                <div className="comanda-header">
+                  <div className="bakery-name">David's Bakery</div>
+                  <div className="bakery-sub">Repostería & Pastelería Artesanal</div>
+                </div>
+
+                <div className="comanda-meta">
+                  <div>
+                    <div style={{ fontSize: 10, opacity: 0.7, marginBottom: 2 }}>COMANDA</div>
+                    <div className="pedido-id">#{String(pedido.id).padStart(4, '0')}</div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ marginBottom: 4 }}>
+                      <span className="estado-badge" style={{ color: colorEstado }}>{pedido.estado}</span>
+                    </div>
+                    <div style={{ fontSize: 11, opacity: 0.7 }}>{fmtDate(pedido.fechaEntrega)}</div>
+                  </div>
+                </div>
+
+                <div className="comanda-body">
+                  <div className="info-block">
+                    <div className="section-title">Cliente</div>
+                    <div className="client-name">{pedido.cliente}</div>
+                    <div className="client-phone">📞 {pedido.telefono}</div>
+                  </div>
+
+                  <hr className="divider" />
+
+                  <div className="info-block">
+                    <div className="section-title">Descripción del Pedido</div>
+                    <div className="descripcion-box">{notasLimpias}</div>
+                  </div>
+
+                  <div className="info-block">
+                    <div className="entrega-row">
+                      <span className="entrega-label">Fecha de entrega</span>
+                      <span className="entrega-value">📅 {fmtDate(pedido.fechaEntrega)}</span>
+                    </div>
+                    <div>
+                      <span className={`envio-badge ${tieneEnvio ? 'envio-si' : 'envio-no'}`}>
+                        {tieneEnvio ? '🚗 Con envío' : '🏪 Retira en tienda'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <hr className="divider" />
+
+                  <div className="info-block">
+                    <div className="section-title">Historial de Pagos</div>
+                    {pagos.length === 0 ? (
+                      <div className="pagos-empty">Sin pagos registrados</div>
+                    ) : (
+                      <table className="pagos-table">
+                        <thead>
+                          <tr>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th style={{ textAlign: 'right' }}>Monto</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {pagos.map(pg => (
+                            <tr key={pg.id}>
+                              <td>{fmtDateTime(pg.fecha)}</td>
+                              <td>{pg.metodoPago}</td>
+                              <td>{fmt(pg.monto)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+
+                  <hr className="divider" />
+
+                  <div className="totales">
+                    <div className="totales-row">
+                      <span>Monto total</span>
+                      <span>{fmt(pedido.montoTotal)}</span>
+                    </div>
+                    <div className="totales-row">
+                      <span>Total pagado</span>
+                      <span style={{ color: '#28825a' }}>{fmt(totalPagado)}</span>
+                    </div>
+                    <div className={`totales-row ${pedido.saldoPendiente > 0 ? 'saldo-row' : 'saldo-ok'}`}>
+                      <span>Saldo pendiente</span>
+                      <span>{fmt(pedido.saldoPendiente)}</span>
+                    </div>
+                    <div className="totales-row total-final">
+                      <span>TOTAL</span>
+                      <span>{fmt(pedido.montoTotal)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="comanda-footer">
+                  Gracias por su preferencia · David's Bakery
+                </div>
+              </div>
+            )
+          })
+        )}
+      </div>
+    </>
+  )
+}
